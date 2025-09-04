@@ -52,10 +52,34 @@
 
                 @if (Route::has('login'))
                     @auth
-                        <a href="{{ url('/dashboard') }}"
-                            class="hidden md:block px-6 py-2.5 bg-gradient-to-r from-teal-500 to-teal-600 text-white font-medium rounded-lg hover:from-teal-600 hover:to-teal-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105">
-                            Dashboard
-                        </a>
+                        <!-- Profile Dropdown -->
+                        <div class="relative">
+                            <button onclick="toggleProfileDropdown()" class="hidden md:flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-teal-500 to-teal-600 text-white font-medium rounded-lg hover:from-teal-600 hover:to-teal-700 transition-all duration-300 shadow-md hover:shadow-lg">
+                                <div class="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-user text-sm"></i>
+                                </div>
+                                <span>{{ auth()->user()->name }}</span>
+                                <i class="fas fa-chevron-down text-xs"></i>
+                            </button>
+                            
+                            <!-- Dropdown Menu -->
+                            <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 z-50">
+                                <div class="py-2">
+                                    <a href="{{ route('profile.edit') }}" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors duration-200">
+                                        <i class="fas fa-user-edit mr-3 text-gray-400"></i>
+                                        Edit Profile
+                                    </a>
+                                    <hr class="my-1">
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit" class="w-full flex items-center px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors duration-200">
+                                            <i class="fas fa-sign-out-alt mr-3 text-gray-400"></i>
+                                            Logout
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     @else
                         @if(request()->routeIs('login'))
                             <a href="{{ route('register') }}"
@@ -105,10 +129,27 @@
 
                 @if (Route::has('login'))
                     @auth
-                        <a href="{{ url('/dashboard') }}"
-                            class="block w-full text-center px-6 py-3 bg-gradient-to-r from-teal-500 to-teal-600 text-white font-medium rounded-lg hover:from-teal-600 hover:to-teal-700 transition-all duration-300 mt-4">
-                            Dashboard
-                        </a>
+                        <!-- Mobile Profile Menu -->
+                        <div class="border-t border-gray-200 pt-4 mt-4">
+                            <div class="flex items-center mb-3">
+                                <div class="w-10 h-10 bg-gradient-to-r from-teal-500 to-teal-600 rounded-full flex items-center justify-center text-white font-bold mr-3">
+                                    {{ substr(auth()->user()->name, 0, 1) }}
+                                </div>
+                                <div>
+                                    <div class="font-medium text-gray-900">{{ auth()->user()->name }}</div>
+                                    <div class="text-sm text-gray-500">{{ auth()->user()->email }}</div>
+                                </div>
+                            </div>
+                            <a href="{{ route('profile.edit') }}" class="block w-full text-center px-6 py-3 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-all duration-300 mb-2">
+                                <i class="fas fa-user-edit mr-2"></i>Edit Profile
+                            </a>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="block w-full text-center px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white font-medium rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-300">
+                                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                                </button>
+                            </form>
+                        </div>
                     @else
                         <div class="flex flex-col space-y-2 mt-4">
                             @if(!request()->routeIs('login'))
@@ -137,4 +178,21 @@
         const mobileMenu = document.getElementById('mobile-menu');
         mobileMenu.classList.toggle('hidden');
     }
+    
+    function toggleProfileDropdown() {
+        const dropdown = document.getElementById('profile-dropdown');
+        dropdown.classList.toggle('hidden');
+    }
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        const dropdown = document.getElementById('profile-dropdown');
+        const button = event.target.closest('button');
+        
+        if (!button || !button.onclick || button.onclick.toString().indexOf('toggleProfileDropdown') === -1) {
+            if (dropdown && !dropdown.classList.contains('hidden')) {
+                dropdown.classList.add('hidden');
+            }
+        }
+    });
 </script>

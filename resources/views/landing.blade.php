@@ -27,35 +27,37 @@
 
                 <!-- Search Form -->
                 <div class="bg-white rounded-lg shadow-lg p-6 max-w-4xl mx-auto">
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Location</label>
-                            <select
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option>Select City</option>
-                                <option>Jakarta</option>
-                                <option>Bali</option>
-                                <option>Yogyakarta</option>
-                                <option>Surabaya</option>
-                                <option>Bandung</option>
-                            </select>
+                    <form action="{{ route('guest.search.rooms') }}" method="POST">
+                        @csrf
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Hotel</label>
+                                <select name="hotel_id" required
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="">Select Hotel</option>
+                                    @foreach($hotels as $hotel)
+                                        <option value="{{ $hotel->id }}">{{ $hotel->nama_hotel }} - {{ $hotel->kota->nama_kota }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Check In</label>
+                                <input type="date" name="check_in" required min="{{ date('Y-m-d') }}"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Check Out</label>
+                                <input type="date" name="check_out" required min="{{ date('Y-m-d', strtotime('+1 day')) }}"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div class="flex items-end">
+                                <button type="submit" class="btn-retell-primary w-full">
+                                    <i class="fas fa-search mr-2 text-white"></i>Search
+                                </button>
+                            </div>
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Check In</label>
-                            <input type="date"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Check Out</label>
-                            <input type="date"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-                        <div class="flex items-end">
-                            <button class="btn-retell-primary w-full">
-                                <i class="fas fa-search mr-2 text-white"></i>Search
-                            </button>
-                        </div>
-                    </div>
+                        <input type="hidden" name="guests" value="2">
+                    </form>
                 </div>
             </div>
         </div>
@@ -70,89 +72,37 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Room Card 1 -->
+                @foreach($roomTypes as $roomType)
                 <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
-                    <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                        alt="Deluxe Room" class="w-full h-48 object-cover">
+                    @php
+                        $roomImages = [
+                            'reguler' => 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                            'deluxe' => 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                            'suite' => 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+                        ];
+                        $minPrice = $roomType->kamars->min('harga_per_malam');
+                    @endphp
+                    <img src="{{ $roomImages[$roomType->tipe_kamar] ?? $roomImages['reguler'] }}"
+                        alt="{{ ucfirst($roomType->tipe_kamar) }} Room" class="w-full h-48 object-cover">
                     <div class="p-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Deluxe Room</h3>
-                        <p class="text-gray-600 mb-4">Spacious room with modern amenities and city view</p>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ ucfirst($roomType->tipe_kamar) }} Room</h3>
+                        <p class="text-gray-600 mb-4">{{ $roomType->deskripsi }}</p>
+                        <div class="mb-4">
+                            <div class="flex items-center text-sm text-gray-600 mb-2">
+                                <i class="fas fa-users mr-2"></i>{{ $roomType->kapasitas }} guests
+                                <i class="fas fa-bed ml-4 mr-2"></i>{{ $roomType->jumlah_kasur }} bed(s)
+                            </div>
+                            <div class="text-xs text-gray-500">
+                                {{ Str::limit($roomType->fasilitas, 60) }}
+                            </div>
+                        </div>
                         <div class="flex items-center justify-between">
-                            <span class="text-2xl font-bold retell-blue">$120/night</span>
-                            <button class="btn-retell-primary">Book Now</button>
+                            <span class="text-2xl font-bold retell-blue">Rp {{ number_format($minPrice, 0, ',', '.') }}/night</span>
+                            <a href="{{ route('guest.hotels') }}" class="btn-retell-primary">Book Now</a>
                         </div>
                     </div>
                 </div>
-
-                <!-- Room Card 2 -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
-                    <img src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                        alt="Suite Room" class="w-full h-48 object-cover">
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Suite Room</h3>
-                        <p class="text-gray-600 mb-4">Luxury suite with separate living area and premium facilities</p>
-                        <div class="flex items-center justify-between">
-                            <span class="text-2xl font-bold retell-blue">$200/night</span>
-                            <button class="btn-retell-primary">Book Now</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Room Card 3 -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
-                    <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                        alt="Standard Room" class="w-full h-48 object-cover">
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Standard Room</h3>
-                        <p class="text-gray-600 mb-4">Comfortable room with essential amenities for budget travelers</p>
-                        <div class="flex items-center justify-between">
-                            <span class="text-2xl font-bold retell-blue">$80/night</span>
-                            <button class="btn-retell-primary">Book Now</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Room Card 4 -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
-                    <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                        alt="Family Room" class="w-full h-48 object-cover">
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Family Room</h3>
-                        <p class="text-gray-600 mb-4">Spacious room perfect for families with multiple beds</p>
-                        <div class="flex items-center justify-between">
-                            <span class="text-2xl font-bold retell-blue">$150/night</span>
-                            <button class="btn-retell-primary">Book Now</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Room Card 5 -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
-                    <img src="https://images.unsplash.com/photo-1595576508898-0ad5c879a061?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                        alt="Executive Room" class="w-full h-48 object-cover">
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Executive Room</h3>
-                        <p class="text-gray-600 mb-4">Premium room with business amenities and lounge access</p>
-                        <div class="flex items-center justify-between">
-                            <span class="text-2xl font-bold retell-blue">$180/night</span>
-                            <button class="btn-retell-primary">Book Now</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Room Card 6 -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
-                    <img src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                        alt="Presidential Suite" class="w-full h-48 object-cover">
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Presidential Suite</h3>
-                        <p class="text-gray-600 mb-4">Ultimate luxury with panoramic views and exclusive services</p>
-                        <div class="flex items-center justify-between">
-                            <span class="text-2xl font-bold retell-blue">$350/night</span>
-                            <button class="btn-retell-primary">Book Now</button>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </section>
@@ -166,88 +116,40 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Property 1 -->
+                @foreach($hotels as $hotel)
                 <div class="relative overflow-hidden rounded-lg shadow-lg group">
-                    <img src="https://images.unsplash.com/photo-1564501049412-61c2a3083791?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                        alt="Jakarta Hotel"
+                    @php
+                        $cityImages = [
+                            'Jakarta' => 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                            'Bali' => 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                            'Yogyakarta' => 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                            'Surabaya' => 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                            'Bandung' => 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                            'default' => 'https://images.unsplash.com/photo-1582719508461-905c673771fd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+                        ];
+                    @endphp
+                    <img src="{{ $cityImages[$hotel->kota->nama_kota] ?? $cityImages['default'] }}"
+                        alt="{{ $hotel->nama_hotel }}"
                         class="w-full h-64 object-cover group-hover:scale-110 transition duration-500">
-                    <div
-                        class="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-30 transition duration-300">
-                    </div>
+                    <div class="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-30 transition duration-300"></div>
                     <div class="absolute bottom-4 left-4 text-white">
-                        <h3 class="text-xl font-semibold">RETELL Jakarta</h3>
-                        <p class="text-sm">Central Business District</p>
+                        <h3 class="text-xl font-semibold">{{ $hotel->nama_hotel }}</h3>
+                        <p class="text-sm">{{ $hotel->kota->nama_kota }}</p>
+                        <div class="flex items-center mt-2">
+                            <div class="flex text-yellow-400">
+                                @for($i = 1; $i <= 5; $i++)
+                                    @if($i <= floor($hotel->rating))
+                                        <i class="fas fa-star text-xs"></i>
+                                    @else
+                                        <i class="far fa-star text-xs"></i>
+                                    @endif
+                                @endfor
+                            </div>
+                            <span class="text-sm ml-2">{{ number_format($hotel->rating, 1) }}</span>
+                        </div>
                     </div>
                 </div>
-
-                <!-- Property 2 -->
-                <div class="relative overflow-hidden rounded-lg shadow-lg group">
-                    <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                        alt="Bali Hotel" class="w-full h-64 object-cover group-hover:scale-110 transition duration-500">
-                    <div
-                        class="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-30 transition duration-300">
-                    </div>
-                    <div class="absolute bottom-4 left-4 text-white">
-                        <h3 class="text-xl font-semibold">RETELL Bali</h3>
-                        <p class="text-sm">Seminyak Beach</p>
-                    </div>
-                </div>
-
-                <!-- Property 3 -->
-                <div class="relative overflow-hidden rounded-lg shadow-lg group">
-                    <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                        alt="Yogyakarta Hotel"
-                        class="w-full h-64 object-cover group-hover:scale-110 transition duration-500">
-                    <div
-                        class="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-30 transition duration-300">
-                    </div>
-                    <div class="absolute bottom-4 left-4 text-white">
-                        <h3 class="text-xl font-semibold">RETELL Yogyakarta</h3>
-                        <p class="text-sm">Cultural Heritage Area</p>
-                    </div>
-                </div>
-
-                <!-- Property 4 -->
-                <div class="relative overflow-hidden rounded-lg shadow-lg group">
-                    <img src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                        alt="Surabaya Hotel"
-                        class="w-full h-64 object-cover group-hover:scale-110 transition duration-500">
-                    <div
-                        class="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-30 transition duration-300">
-                    </div>
-                    <div class="absolute bottom-4 left-4 text-white">
-                        <h3 class="text-xl font-semibold">RETELL Surabaya</h3>
-                        <p class="text-sm">Business Center</p>
-                    </div>
-                </div>
-
-                <!-- Property 5 -->
-                <div class="relative overflow-hidden rounded-lg shadow-lg group">
-                    <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                        alt="Bandung Hotel"
-                        class="w-full h-64 object-cover group-hover:scale-110 transition duration-500">
-                    <div
-                        class="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-30 transition duration-300">
-                    </div>
-                    <div class="absolute bottom-4 left-4 text-white">
-                        <h3 class="text-xl font-semibold">RETELL Bandung</h3>
-                        <p class="text-sm">Mountain Resort</p>
-                    </div>
-                </div>
-
-                <!-- Property 6 -->
-                <div class="relative overflow-hidden rounded-lg shadow-lg group">
-                    <img src="https://images.unsplash.com/photo-1582719508461-905c673771fd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                        alt="Lombok Hotel"
-                        class="w-full h-64 object-cover group-hover:scale-110 transition duration-500">
-                    <div
-                        class="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-30 transition duration-300">
-                    </div>
-                    <div class="absolute bottom-4 left-4 text-white">
-                        <h3 class="text-xl font-semibold">RETELL Lombok</h3>
-                        <p class="text-sm">Tropical Paradise</p>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </section>
@@ -261,36 +163,26 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Facility 1 -->
+                @foreach($facilities->take(6) as $facility)
                 <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                        alt="Swimming Pool" class="w-full h-48 object-cover">
+                    @php
+                        $facilityImages = [
+                            'WiFi Gratis' => 'https://images.unsplash.com/photo-1586953208448-b95a79798f07?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                            'Kolam Renang' => 'https://images.unsplash.com/photo-1571902943202-507ec2618e8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                            'Restoran' => 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                            'Spa & Wellness' => 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                            'Fitness Center' => 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                            'default' => 'https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+                        ];
+                    @endphp
+                    <img src="{{ $facilityImages[$facility->nama_fasilitas] ?? $facilityImages['default'] }}"
+                        alt="{{ $facility->nama_fasilitas }}" class="w-full h-48 object-cover">
                     <div class="p-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Swimming Pool</h3>
-                        <p class="text-gray-600">Relax and unwind in our infinity pool with stunning city views</p>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ $facility->nama_fasilitas }}</h3>
+                        <p class="text-gray-600">{{ $facility->deskripsi }}</p>
                     </div>
                 </div>
-
-                <!-- Facility 2 -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                        alt="Spa & Wellness" class="w-full h-48 object-cover">
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Spa & Wellness</h3>
-                        <p class="text-gray-600">Rejuvenate your body and mind with our premium spa treatments</p>
-                    </div>
-                </div>
-
-                <!-- Facility 3 -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                        alt="Fitness Center" class="w-full h-48 object-cover">
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Fitness Center</h3>
-                        <p class="text-gray-600">Stay fit with our state-of-the-art gym equipment and personal trainers
-                        </p>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </section>

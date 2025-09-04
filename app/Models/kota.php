@@ -13,6 +13,14 @@ class Kota extends Model
         'nama_kota'
     ];
 
+    /**
+     * Get the route key for the model.
+     */
+    public function getRouteKeyName()
+    {
+        return 'id';
+    }
+
     public function hotels(): HasMany
     {
         return $this->hasMany(Hotel::class, 'kota_id');
