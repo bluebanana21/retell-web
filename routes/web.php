@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\KamarController;
 use App\Http\Controllers\Admin\FasilitasController;
@@ -69,5 +70,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+// Google Authentication Routes
+Route::get('/google/redirect', [GoogleController::class, 'redirect'])->name('google.redirect');
+Route::get('/google/callback', [GoogleController::class, 'callback'])->name('google.callback');
 
 require __DIR__.'/auth.php';
