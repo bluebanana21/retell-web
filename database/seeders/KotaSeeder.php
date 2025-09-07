@@ -27,7 +27,7 @@ class KotaSeeder extends Seeder
         ];
 
         foreach ($kotas as $kota) {
-            Kota::firstOrCreate($kota);
+           Kota::firstOrCreate($kota);
         }
     }
 }

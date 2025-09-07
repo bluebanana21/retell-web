@@ -61,43 +61,48 @@ class GuestController extends Controller
         return view('guest.hotel-detail', compact('hotel', 'roomTypes'));
     }
 
-    public function searchRooms(Request $request)
+    public function searchHotel(Request $request)
     {
         $request->validate([
-            'hotel_id' => 'required|exists:hotel,id',
-            'check_in' => 'required|date|after_or_equal:today',
-            'check_out' => 'required|date|after:check_in',
+            // 'hotel_id' => 'required|exists:hotel,id',
+            // 'check_in' => 'required|date|after_or_equal:today',
+            // 'check_out' => 'required|date|after:check_in',
+            'city' => 'required|string',
             'guests' => 'required|integer|min:1'
         ]);
 
-        $hotel = Hotel::with(['kota', 'fasilitas'])->findOrFail($request->hotel_id);
-        $checkIn = Carbon::parse($request->check_in);
-        $checkOut = Carbon::parse($request->check_out);
+        // $hotel = Hotel::with(['kota', 'fasilitas'])->findOrFail($request->hotel_id);
+        // $checkIn = Carbon::parse($request->check_in);
+        // $checkOut = Carbon::parse($request->check_out);
+
+        $kota = Kota::where('nama_kota', 'like', '%' . $request->city . '%')->first();
+        $hotel = Hotel::with(['kota', 'fasilitas'])
+            ->where('kota_id', $kota ? $kota->id : 0)
+            ->firstOrFail();
         $guests = $request->guests;
 
         // Get available room types that can accommodate the guests
-        $availableRooms = DetailKamar::with(['kamars' => function ($query) use ($hotel, $checkIn, $checkOut) {
-            $query->where('id_hotel', $hotel->id)
-                ->where('status', 'tersedia')
-                ->whereDoesntHave('reservasis', function ($q) use ($checkIn, $checkOut) {
-                    $q->where(function ($query) use ($checkIn, $checkOut) {
-                        $query->whereBetween('check_in', [$checkIn, $checkOut])
-                            ->orWhereBetween('check_out', [$checkIn, $checkOut])
-                            ->orWhere(function ($q) use ($checkIn, $checkOut) {
-                                $q->where('check_in', '<=', $checkIn)
-                                    ->where('check_out', '>=', $checkOut);
-                            });
-                    });
-                });
-        }])->where('kapasitas', '>=', $guests)
-            ->get()
-            ->filter(function ($detailKamar) {
-                return $detailKamar->kamars->count() > 0;
-            });
+        // $availableRooms = DetailKamar::with(['kamars' => function ($query) use ($hotel, $checkIn, $checkOut) {
+        //     $query->where('id_hotel', $hotel->id)
+        //         ->where('status', 'tersedia')
+        //         ->whereDoesntHave('reservasis', function ($q) use ($checkIn, $checkOut) {
+        //             $q->where(function ($query) use ($checkIn, $checkOut) {
+        //                 $query->whereBetween('check_in', [$checkIn, $checkOut])
+        //                     ->orWhereBetween('check_out', [$checkIn, $checkOut])
+        //                     ->orWhere(function ($q) use ($checkIn, $checkOut) {
+        //                         $q->where('check_in', '<=', $checkIn)
+        //                             ->where('check_out', '>=', $checkOut);
+        //                     });
+        //             });
+        //         });
+        // }])->where('kapasitas', '>=', $guests)
+        //     ->get()
+        //     ->filter(function ($detailKamar) {
+        //         return $detailKamar->kamars->count() > 0;
+        //     });
 
-        $nights = $checkIn->diffInDays($checkOut);
-
-        return view('guest.search-results', compact('hotel', 'availableRooms', 'checkIn', 'checkOut', 'guests', 'nights'));
+        // $nights = $checkIn->diffInDays($checkOut);
+        return view('guest.showHotel', compact('hotel', 'guests', 'kota'));
     }
 
     //yang ini buat test penampilan booking

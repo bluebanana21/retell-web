@@ -1,15 +1,15 @@
 <?php
 
+use App\Models\Kota;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\KamarController;
-use App\Http\Controllers\Admin\FasilitasController;
-use App\Http\Controllers\Admin\KotaController;
-use App\Http\Controllers\Resepsionis\ResepsionisController;
 use App\Http\Controllers\Guest\GuestController;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Admin\FasilitasController;
+use App\Http\Controllers\Resepsionis\ResepsionisController;
 
 // Guest Routes (Public)
 Route::get('/', function () {
@@ -26,7 +26,22 @@ Route::get('/', function () {
 Route::get('/guest', [GuestController::class, 'index'])->name('guest.home');
 Route::get('/hotels', [GuestController::class, 'hotels'])->name('guest.hotels');
 Route::get('/hotel/{hotel}', [GuestController::class, 'hotelDetail'])->name('guest.hotel.detail');
-Route::post('/search-rooms', [GuestController::class, 'searchRooms'])->name('guest.search.rooms');
+Route::post('/search-hotel', [GuestController::class, 'searchHotel'])->name('guest.search.hotels');
+Route::get('/cities/search', function () {
+    $search = request('search', '');
+    
+    if (strlen($search) < 2) {
+        return response()->json([]);
+    }
+    
+    $cities = Kota::where('nama_kota', 'LIKE', '%' . $search . '%')
+        ->select('id', 'nama_kota')
+        ->limit(10)
+        ->get();
+    
+    return response()->json($cities);
+})->name('cities.search');
+// Route::get('/search-hotel/{kota}', [GuestController::class, 'showSearchHotel'])->name('guest.show.hotels');
 
 // Guest Routes (Authenticated)
 Route::middleware(['auth', 'role:user'])->group(function () {
