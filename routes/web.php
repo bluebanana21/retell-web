@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\KotaController;
+use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\KamarController;
 use App\Http\Controllers\Guest\GuestController;
@@ -14,13 +15,13 @@ use App\Http\Controllers\Resepsionis\ResepsionisController;
 // Guest Routes (Public)
 Route::get('/', function () {
     $hotels = \App\Models\Hotel::with(['kota', 'fasilitas'])->get();
-    $roomTypes = \App\Models\DetailKamar::with(['kamars' => function($query) {
+    $roomTypes = \App\Models\DetailKamar::with(['kamars' => function ($query) {
         $query->where('status', 'tersedia');
-    }])->get()->filter(function($detailKamar) {
+    }])->get()->filter(function ($detailKamar) {
         return $detailKamar->kamars->count() > 0;
     });
     $facilities = \App\Models\Fasilitas::all();
-    
+
     return view('landing', compact('hotels', 'roomTypes', 'facilities'));
 })->name('home');
 Route::get('/guest', [GuestController::class, 'index'])->name('guest.home');
@@ -45,6 +46,7 @@ Route::get('/cities/search', function () {
 
 // Guest Routes (Authenticated)
 Route::middleware(['auth', 'role:user'])->group(function () {
+    Route::get('booking-form-view/{}', [GuestController::class, 'bookingFormView'])->name('guest.booking.form.view');
     Route::get('/booking-form', [GuestController::class, 'bookingForm'])->name('guest.booking.form');
     Route::post('/booking', [GuestController::class, 'storeBooking'])->name('guest.booking.store');
     Route::get('/booking-success/{reservasi}', [GuestController::class, 'bookingSuccess'])->name('guest.booking.success');
@@ -86,4 +88,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+// Google Authentication Routes
+Route::get('/google/redirect', [GoogleController::class, 'redirect'])->name('google.redirect');
+Route::get('/google/callback', [GoogleController::class, 'callback'])->name('google.callback');
+
+require __DIR__ . '/auth.php';
