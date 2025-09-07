@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\KamarController;
 use App\Http\Controllers\Guest\GuestController;
 use App\Http\Controllers\Admin\FasilitasController;
 use App\Http\Controllers\Resepsionis\ResepsionisController;
+use App\Http\Controllers\Payment\PaymentController;
 
 // Guest Routes (Public)
 Route::get('/', function () {
@@ -50,6 +51,14 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::post('/booking', [GuestController::class, 'storeBooking'])->name('guest.booking.store');
     Route::get('/booking-success/{reservasi}', [GuestController::class, 'bookingSuccess'])->name('guest.booking.success');
     Route::get('/print-reservation/{reservasi}', [GuestController::class, 'printReservation'])->name('guest.print.reservation');
+    
+    // Payment Routes
+    Route::get('/payment/{reservasi}', [PaymentController::class, 'show'])->name('payment.show');
+    Route::post('/payment/{reservasi}/process', [PaymentController::class, 'process'])->name('payment.process');
+    Route::get('/payment/success', [PaymentController::class, 'success'])->name('payment.success');
+    Route::get('/payment/pending', [PaymentController::class, 'pending'])->name('payment.pending');
+    Route::get('/payment/failed', [PaymentController::class, 'failed'])->name('payment.failed');
+    Route::post('/payment/check-status', [PaymentController::class, 'checkStatus'])->name('payment.check.status');
 });
 
 // Admin Routes
@@ -90,5 +99,8 @@ Route::middleware('auth')->group(function () {
 // Google Authentication Routes
 Route::get('/google/redirect', [GoogleController::class, 'redirect'])->name('google.redirect');
 Route::get('/google/callback', [GoogleController::class, 'callback'])->name('google.callback');
+
+// Midtrans Callback Route (Public)
+Route::post('/payment/midtrans/callback', [PaymentController::class, 'callback'])->name('payment.midtrans.callback');
 
 require __DIR__ . '/auth.php';

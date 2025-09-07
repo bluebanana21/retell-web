@@ -182,8 +182,9 @@ class GuestController extends Controller
             Kamar::find($kamarId)->update(['status' => 'dibooked']);
         }
 
-        return redirect()->route('guest.booking.success', ['reservasi' => $reservations[0]->id_reservasi])
-            ->with('success', 'Reservasi berhasil dibuat!');
+        // Redirect to payment page instead of success page
+        return redirect()->route('payment.show', ['reservasi' => $reservations[0]->id_reservasi])
+            ->with('success', 'Reservasi berhasil dibuat! Silakan lakukan pembayaran.');
     }
 
     public function bookingSuccess(Reservasi $reservasi)

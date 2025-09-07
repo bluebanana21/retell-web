@@ -12,10 +12,16 @@ class Transaksi extends Model
 
     protected $fillable = [
         'id_reservasi',
+        'order_id',
+        'transaction_id',
         'metode_pembayaran',
         'jumlah_pembayaran',
         'tanggal_pembayaran',
-        'status_pembayaran'
+        'status_pembayaran',
+        'midtrans_payment_type',
+        'midtrans_transaction_status',
+        'midtrans_fraud_status',
+        'snap_token'
     ];
 
     protected $casts = [
