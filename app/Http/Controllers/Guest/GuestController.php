@@ -82,63 +82,33 @@ class GuestController extends Controller
         $guests = $request->guests;
 
         // Get available room types that can accommodate the guests
-<<<<<<< HEAD
-        // $availableRooms = DetailKamar::with(['kamars' => function($query) use ($hotel, $checkIn, $checkOut) {
+        // $availableRooms = DetailKamar::with(['kamars' => function ($query) use ($hotel, $checkIn, $checkOut) {
         //     $query->where('id_hotel', $hotel->id)
-        //           ->where('status', 'tersedia')
-        //           ->whereDoesntHave('reservasis', function($q) use ($checkIn, $checkOut) {
-        //               $q->where(function($query) use ($checkIn, $checkOut) {
-        //                   $query->whereBetween('check_in', [$checkIn, $checkOut])
-        //                         ->orWhereBetween('check_out', [$checkIn, $checkOut])
-        //                         ->orWhere(function($q) use ($checkIn, $checkOut) {
-        //                             $q->where('check_in', '<=', $checkIn)
-        //                               ->where('check_out', '>=', $checkOut);
-        //                         });
-        //               });
-        //           });
+        //         ->where('status', 'tersedia')
+        //         ->whereDoesntHave('reservasis', function ($q) use ($checkIn, $checkOut) {
+        //             $q->where(function ($query) use ($checkIn, $checkOut) {
+        //                 $query->whereBetween('check_in', [$checkIn, $checkOut])
+        //                     ->orWhereBetween('check_out', [$checkIn, $checkOut])
+        //                     ->orWhere(function ($q) use ($checkIn, $checkOut) {
+        //                         $q->where('check_in', '<=', $checkIn)
+        //                             ->where('check_out', '>=', $checkOut);
+        //                     });
+        //             });
+        //         });
         // }])->where('kapasitas', '>=', $guests)
-        //   ->get()
-        //   ->filter(function($detailKamar) {
-        //       return $detailKamar->kamars->count() > 0;
-        //   });
-=======
-        $availableRooms = DetailKamar::with(['kamars' => function ($query) use ($hotel, $checkIn, $checkOut) {
-            $query->where('id_hotel', $hotel->id)
-                ->where('status', 'tersedia')
-                ->whereDoesntHave('reservasis', function ($q) use ($checkIn, $checkOut) {
-                    $q->where(function ($query) use ($checkIn, $checkOut) {
-                        $query->whereBetween('check_in', [$checkIn, $checkOut])
-                            ->orWhereBetween('check_out', [$checkIn, $checkOut])
-                            ->orWhere(function ($q) use ($checkIn, $checkOut) {
-                                $q->where('check_in', '<=', $checkIn)
-                                    ->where('check_out', '>=', $checkOut);
-                            });
-                    });
-                });
-        }])->where('kapasitas', '>=', $guests)
-            ->get()
-            ->filter(function ($detailKamar) {
-                return $detailKamar->kamars->count() > 0;
-            });
->>>>>>> 44ef1d56cc11daa7ed408c3616e5805e1053904d
+        //     ->get()
+        //     ->filter(function ($detailKamar) {
+        //         return $detailKamar->kamars->count() > 0;
+        //     });
 
         // $nights = $checkIn->diffInDays($checkOut);
         return view('guest.showHotel', compact('hotel', 'guests', 'kota'));
     }
 
-<<<<<<< HEAD
-    // public function showSearchHotel(Hotel $hotel)
-    // {
-    //     $kota = $hotel->kota->name;
-    //     dd( $kota);
-    //     return view('guest.showHotel', compact('hotel', 'kota')); 
-    // }
-=======
     public function bookingFormView()
     {
         return view('guest.booking-form-view');
     }
->>>>>>> 44ef1d56cc11daa7ed408c3616e5805e1053904d
 
     public function bookingForm(Request $request)
     {
