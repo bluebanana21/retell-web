@@ -6,6 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RETELL - Hotel Booking</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script src="https://cdn.tailwindcss.com"></script>
+    {{-- auto complete --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/css/autoComplete.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/autoComplete.min.js"></script>
+    {{-- end --}}
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -26,39 +31,33 @@
                 <p class="text-xl text-white mb-12">Find Your Perfect Stay</p>
 
                 <!-- Search Form -->
-                <div class="bg-white rounded-lg shadow-lg p-6 max-w-4xl mx-auto">
-                    <form action="{{ route('guest.search.rooms') }}" method="POST">
-                        @csrf
-                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Hotel</label>
-                                <select name="hotel_id" required
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    <option value="">Select Hotel</option>
-                                    @foreach($hotels as $hotel)
-                                        <option value="{{ $hotel->id }}">{{ $hotel->nama_hotel }} - {{ $hotel->kota->nama_kota }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Check In</label>
-                                <input type="date" name="check_in" required min="{{ date('Y-m-d') }}"
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Check Out</label>
-                                <input type="date" name="check_out" required min="{{ date('Y-m-d', strtotime('+1 day')) }}"
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            </div>
-                            <div class="flex items-end">
-                                <button type="submit" class="btn-retell-primary w-full">
-                                    <i class="fas fa-search mr-2 text-white"></i>Search
-                                </button>
-                            </div>
-                        </div>
-                        <input type="hidden" name="guests" value="2">
-                    </form>
+                <div class="bg-white rounded-lg shadow-lg p-6 w-[400px] mx-auto">
+    <form action="{{ route('guest.search.hotels') }}" method="POST">
+        @csrf
+        <div class="grid grid-cols-1 gap-4">
+            <div>
+                <h1 class="block text-2xl font-medium text-black-700 mb-6">Search Hotels</h1>
+                <div class="relative">
+                    <input id="autoComplete" 
+                           type="text" 
+                           name="city" 
+                           placeholder="Enter City Name" 
+                           required
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <div id="loading" class="absolute right-3 top-2.5 hidden">
+                        <i class="fas fa-spinner fa-spin text-gray-400"></i>
+                    </div>
                 </div>
+            </div>
+            <div class="flex items-end">
+                <button type="submit" class="btn-retell-primary w-full">
+                    <i class="fas fa-search mr-2 text-white"></i>Search
+                </button>
+            </div>
+        </div>
+        <input type="hidden" name="guests" value="2">
+    </form>
+</div>
             </div>
         </div>
     </section>
@@ -267,6 +266,69 @@
             });
         });
     </script>
-</body>
+    <script>
+document.addEventListener("DOMContentLoaded", () => {
+    const formEl = document.querySelector('#autoComplete').closest('form');
+    const inputEl = document.querySelector("#autoComplete");
 
+    const autoCompleteJS = new autoComplete({
+        selector: "#autoComplete",
+        threshold: 2,
+        debounce: 300,
+        data: {
+            src: async (query) => {
+                const source = await fetch(`/cities/search?search=${encodeURIComponent(query)}`);
+                const data = await source.json();
+                return data.map(item => ({
+                    id: item.id,
+                    value: item.nama_kota
+                }));
+            },
+            keys: ["value"],
+        },
+        resultItem: {
+            highlight: true
+        },
+        resultsList: {
+            element: (list, data) => {
+                if (!data.results.length) {
+                    const message = document.createElement("div");
+                    message.innerHTML = `
+                        <div style="padding: 12px; text-align: center; color: #6b7280;">
+                            Tidak ada kota yang ditemukan untuk "${data.query}"
+                        </div>
+                    `;
+                    list.appendChild(message);
+                }
+            },
+            noResults: true,
+            maxResults: 8
+        }
+    });
+
+    // cara baru: event listener langsung ke instance
+    inputEl.addEventListener("selection", (event) => {
+        const feedback = event.detail;
+        const selected = feedback.selection.value;
+
+        console.log("=== Debug Selection (manual listener) ===");
+        console.log("Selected object:", feedback.selection);
+        console.log("Selected ID:", selected.id);
+        console.log("Selected Value:", selected.value);
+
+        inputEl.value = selected.value;
+        inputEl.dispatchEvent(new Event("input", { bubbles: true }));
+
+        let cityIdInput = formEl.querySelector('input[name="city_id"]');
+        if (!cityIdInput) {
+            cityIdInput = document.createElement('input');
+            cityIdInput.type = 'hidden';
+            cityIdInput.name = 'city_id';
+            formEl.appendChild(cityIdInput);
+        }
+        cityIdInput.value = selected.id;
+    });
+});
+</script>
+</body>
 </html>
