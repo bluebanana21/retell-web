@@ -97,7 +97,7 @@
                         </div>
                         <div class="flex items-center justify-between">
                             <span class="text-2xl font-bold retell-blue">Rp {{ number_format($minPrice, 0, ',', '.') }}/night</span>
-                            <a href="{{ route('guest.hotels') }}" class="btn-retell-primary">Book Now</a>
+                            <a href="{{ route('guest.search.hotels') }}" class="btn-retell-primary">Book Now</a>
                         </div>
                     </div>
                 </div>
