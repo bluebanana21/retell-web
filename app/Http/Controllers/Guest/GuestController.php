@@ -22,7 +22,7 @@ class GuestController extends Controller
             ->get();
 
         $kotas = Kota::withCount('hotels')->get();
-        
+
         return view('guest.index', compact('hotels', 'kotas'));
     }
 
@@ -49,12 +49,12 @@ class GuestController extends Controller
     public function hotelDetail(Hotel $hotel)
     {
         $hotel->load(['kota', 'fasilitas', 'reviews.user']);
-        
+
         // Get available room types with their details and prices
-        $roomTypes = DetailKamar::with(['kamars' => function($query) use ($hotel) {
+        $roomTypes = DetailKamar::with(['kamars' => function ($query) use ($hotel) {
             $query->where('id_hotel', $hotel->id)
-                  ->where('status', 'tersedia');
-        }])->get()->filter(function($detailKamar) {
+                ->where('status', 'tersedia');
+        }])->get()->filter(function ($detailKamar) {
             return $detailKamar->kamars->count() > 0;
         });
 
@@ -76,28 +76,33 @@ class GuestController extends Controller
         $guests = $request->guests;
 
         // Get available room types that can accommodate the guests
-        $availableRooms = DetailKamar::with(['kamars' => function($query) use ($hotel, $checkIn, $checkOut) {
+        $availableRooms = DetailKamar::with(['kamars' => function ($query) use ($hotel, $checkIn, $checkOut) {
             $query->where('id_hotel', $hotel->id)
-                  ->where('status', 'tersedia')
-                  ->whereDoesntHave('reservasis', function($q) use ($checkIn, $checkOut) {
-                      $q->where(function($query) use ($checkIn, $checkOut) {
-                          $query->whereBetween('check_in', [$checkIn, $checkOut])
-                                ->orWhereBetween('check_out', [$checkIn, $checkOut])
-                                ->orWhere(function($q) use ($checkIn, $checkOut) {
-                                    $q->where('check_in', '<=', $checkIn)
-                                      ->where('check_out', '>=', $checkOut);
-                                });
-                      });
-                  });
+                ->where('status', 'tersedia')
+                ->whereDoesntHave('reservasis', function ($q) use ($checkIn, $checkOut) {
+                    $q->where(function ($query) use ($checkIn, $checkOut) {
+                        $query->whereBetween('check_in', [$checkIn, $checkOut])
+                            ->orWhereBetween('check_out', [$checkIn, $checkOut])
+                            ->orWhere(function ($q) use ($checkIn, $checkOut) {
+                                $q->where('check_in', '<=', $checkIn)
+                                    ->where('check_out', '>=', $checkOut);
+                            });
+                    });
+                });
         }])->where('kapasitas', '>=', $guests)
-          ->get()
-          ->filter(function($detailKamar) {
-              return $detailKamar->kamars->count() > 0;
-          });
+            ->get()
+            ->filter(function ($detailKamar) {
+                return $detailKamar->kamars->count() > 0;
+            });
 
         $nights = $checkIn->diffInDays($checkOut);
 
         return view('guest.search-results', compact('hotel', 'availableRooms', 'checkIn', 'checkOut', 'guests', 'nights'));
+    }
+
+    public function bookingFormView()
+    {
+        return view('guest.booking-form-view');
     }
 
     public function bookingForm(Request $request)
@@ -131,8 +136,14 @@ class GuestController extends Controller
         $totalPrice = $availableRooms->sum('harga_per_malam') * $nights;
 
         return view('guest.booking-form', compact(
-            'hotel', 'detailKamar', 'availableRooms', 'checkIn', 'checkOut', 
-            'nights', 'totalPrice', 'request'
+            'hotel',
+            'detailKamar',
+            'availableRooms',
+            'checkIn',
+            'checkOut',
+            'nights',
+            'totalPrice',
+            'request'
         ));
     }
 
@@ -147,7 +158,7 @@ class GuestController extends Controller
         ]);
 
         $reservations = [];
-        
+
         foreach ($request->kamar_ids as $kamarId) {
             $reservation = Reservasi::create([
                 'id_user' => Auth::id(),
@@ -172,7 +183,7 @@ class GuestController extends Controller
     public function bookingSuccess(Reservasi $reservasi)
     {
         $reservasi->load(['kamar.hotel', 'kamar.detailKamar', 'user']);
-        
+
         return view('guest.booking-success', compact('reservasi'));
     }
 
@@ -183,7 +194,7 @@ class GuestController extends Controller
         }
 
         $reservasi->load(['kamar.hotel', 'kamar.detailKamar', 'user']);
-        
+
         return view('guest.print-reservation', compact('reservasi'));
     }
 }

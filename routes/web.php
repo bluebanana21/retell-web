@@ -14,13 +14,13 @@ use Illuminate\Support\Facades\Auth;
 // Guest Routes (Public)
 Route::get('/', function () {
     $hotels = \App\Models\Hotel::with(['kota', 'fasilitas'])->get();
-    $roomTypes = \App\Models\DetailKamar::with(['kamars' => function($query) {
+    $roomTypes = \App\Models\DetailKamar::with(['kamars' => function ($query) {
         $query->where('status', 'tersedia');
-    }])->get()->filter(function($detailKamar) {
+    }])->get()->filter(function ($detailKamar) {
         return $detailKamar->kamars->count() > 0;
     });
     $facilities = \App\Models\Fasilitas::all();
-    
+
     return view('landing', compact('hotels', 'roomTypes', 'facilities'));
 })->name('home');
 Route::get('/guest', [GuestController::class, 'index'])->name('guest.home');
@@ -30,6 +30,7 @@ Route::post('/search-rooms', [GuestController::class, 'searchRooms'])->name('gue
 
 // Guest Routes (Authenticated)
 Route::middleware(['auth', 'role:user'])->group(function () {
+    Route::get('booking-form-view/{}', [GuestController::class, 'bookingFormView'])->name('guest.booking.form.view');
     Route::get('/booking-form', [GuestController::class, 'bookingForm'])->name('guest.booking.form');
     Route::post('/booking', [GuestController::class, 'storeBooking'])->name('guest.booking.store');
     Route::get('/booking-success/{reservasi}', [GuestController::class, 'bookingSuccess'])->name('guest.booking.success');
@@ -75,4 +76,4 @@ Route::middleware('auth')->group(function () {
 Route::get('/google/redirect', [GoogleController::class, 'redirect'])->name('google.redirect');
 Route::get('/google/callback', [GoogleController::class, 'callback'])->name('google.callback');
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
