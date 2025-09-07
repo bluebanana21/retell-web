@@ -66,7 +66,7 @@
                 </div>
             </div>
 
-            {{-- Right side --}}
+            {{-- Sisi kanan --}}
             <div class="col-span-1">
                 <div class="bg-white rounded-lg p-4 text-black mt-4 shadow-xl">
                     <h1>The Classic Twin</h1>
