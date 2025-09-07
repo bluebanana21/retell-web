@@ -12,71 +12,59 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            background: #f9fafb;
         }
         .font-joan {
             font-family: 'Joan', serif;
-        }
-        .retell-blue {
-            color: #1e40af;
-        }
-        .retell-blue-bg {
-            background-color: #1e40af;
-        }
-        .retell-teal {
-            background-color: #0f766e;
         }
         .btn-retell-primary {
             background-color: #0f766e;
             color: white;
             padding: 0.75rem 1.5rem;
-            border-radius: 0.375rem;
+            border-radius: 9999px;
             font-weight: 600;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
             border: none;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 3px 10px rgba(15, 118, 110, 0.25);
         }
         .btn-retell-primary:hover {
             background-color: #134e4a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(15, 118, 110, 0.35);
         }
         .hotel-card {
-            background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 50%, #a7f3d0 100%);
-            border-radius: 12px;
+            background: white;
+            border-radius: 16px;
             padding: 1.5rem;
             margin-bottom: 1rem;
-            box-shadow: 0 4px 15px rgba(15, 118, 110, 0.1);
+            box-shadow: 0 4px 20px rgba(15, 118, 110, 0.08);
             transition: all 0.3s ease;
             cursor: pointer;
-            border: 1px solid rgba(15, 118, 110, 0.1);
+            border: 1px solid #e5e7eb;
         }
         .hotel-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(15, 118, 110, 0.2);
-            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 50%, #a7f3d0 100%);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 28px rgba(15, 118, 110, 0.15);
         }
         .hotel-card.selected {
-            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 50%, #86efac 100%);
             border-color: #0f766e;
-            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.2);
+            box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.15);
         }
         .hotel-image {
-            width: 120px;
-            height: 80px;
-            border-radius: 8px;
+            width: 140px;
+            height: 100px;
+            border-radius: 12px;
             object-fit: cover;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
         .navbar {
             background: linear-gradient(135deg, #0f766e 0%, #134e4a 100%);
             padding: 1rem 2rem;
-            box-shadow: 0 2px 10px rgba(15, 118, 110, 0.2);
-        }
-        .price-highlight {
-            background: linear-gradient(135deg, #0f766e, #134e4a);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            box-shadow: 0 2px 10px rgba(15, 118, 110, 0.25);
         }
     </style>
 </head>
@@ -84,202 +72,80 @@
 <body class="bg-white font-inter">
     @include('layouts.retell-navbar')
     <div class="min-h-screen pt-20 px-8">
-        <!-- Hotel Results -->
         <div class="max-w-6xl mx-auto">
-            <div class="text-center mb-8">
-                <h1 class="text-4xl font-bold text-gray-800 mb-2">Hotel Terbaik di Jakarta Selatan</h1>
+            <div class="text-center mb-10">
+                <h1 class="text-4xl font-bold text-gray-800 mb-3">Hotel Terbaik di {{ $kota->nama_kota }}</h1>
                 <p class="text-gray-600 text-lg">Temukan pengalaman menginap yang tak terlupakan</p>
             </div>
             
-            <!-- Hotel Cards -->
-            <div class="space-y-6">
-                <!-- Aston Simatupang -->
+            <div class="space-y-8">
                 <div class="hotel-card" data-hotel="aston-simatupang">
                     <div class="flex items-center space-x-6">
-                        <img src="https://images.unsplash.com/photo-1564501049412-61c2a3083791?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                             alt="Aston Simatupang" 
-                             class="hotel-image">
+                        <img src="" alt="Gambar Hotel {{ $hotel->nama_hotel }}" class="hotel-image">
                         <div class="flex-1">
-                            <h3 class="text-2xl font-bold text-gray-800 mb-2">Aston Simatupang</h3>
-                            <p class="text-gray-600 mb-3 flex items-center">
-                                <i class="fas fa-map-marker-alt mr-2 text-teal-600"></i>
-                                Simatupang, Jakarta Selatan
+                            <h3 class="text-2xl font-bold text-gray-800 mb-2">{{ $hotel->nama_hotel }}</h3>
+                            <p class="text-gray-600 mb-3 leading-relaxed">
+                               {{ $hotel->deskripsi }}
                             </p>
-                            <div class="flex items-center mb-2">
-                                <div class="flex text-yellow-400 mr-3">
+                            <div class="flex items-center mb-3">
+                                <div class="flex text-yellow-400 mr-3 text-lg">
                                     <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="far fa-star"></i>
                                 </div>
-                                <span class="text-gray-700 font-semibold">4.2/5</span>
-                                <span class="text-gray-500 ml-2">(248 ulasan)</span>
+                                <span class="text-gray-700 font-semibold">{{ $hotel->rating }}/5</span>
                             </div>
-                            <div class="flex items-center space-x-4 text-sm text-teal-700">
-                                <span><i class="fas fa-wifi mr-1"></i>WiFi Gratis</span>
-                                <span><i class="fas fa-swimming-pool mr-1"></i>Kolam Renang</span>
-                                <span><i class="fas fa-utensils mr-1"></i>Restoran</span>
+                            <p class="text-gray-600 mb-2 font-medium">Fasilitas:</p>
+                            <div class="flex flex-wrap gap-3 text-sm text-teal-700">
+                                @foreach($hotel->fasilitas as $facility)
+                                    <span class="flex items-center bg-teal-50 px-3 py-1 rounded-full border border-teal-100">
+                                        @if($facility->id == 1)
+                                            <i class="fas fa-wifi mr-2"></i>
+                                        @elseif($facility->id == 2)
+                                            <i class="fas fa-swimming-pool mr-2"></i>
+                                        @elseif($facility->id == 3)
+                                            <i class="fas fa-utensils mr-2"></i>
+                                        @elseif($facility->id == 4)
+                                            <i class="fas fa-spa mr-2"></i>
+                                        @elseif($facility->id == 5)
+                                            <i class="fas fa-dumbbell mr-2"></i>
+                                        @elseif($facility->id == 6)
+                                            <i class="fas fa-parking mr-2"></i>
+                                        @elseif($facility->id == 7)
+                                            <i class="fas fa-snowflake mr-2"></i>
+                                        @elseif($facility->id == 8)
+                                            <i class="fas fa-concierge-bell mr-2"></i>
+                                        @elseif($facility->id == 9)
+                                            <i class="fas fa-tshirt mr-2"></i>
+                                        @elseif($facility->id == 10)
+                                            <i class="fas fa-briefcase mr-2"></i>
+                                        @else
+                                            <i class="fas fa-check mr-2"></i>
+                                        @endif
+                                        {{ $facility->nama_fasilitas }}
+                                    </span>
+                                @endforeach
                             </div>
                         </div>
                         <div class="text-right">
-                            <div class="text-3xl font-bold price-highlight">Rp 850.000</div>
-                            <div class="text-gray-600">/malam</div>
-                            <button class="btn-retell-primary mt-3">
+                            <button class="btn-retell-primary">
                                 <i class="fas fa-calendar-check mr-2"></i>
                                 Reservasi
                             </button>
                         </div>
                     </div>
                 </div>
-
-                <!-- Aston Bellevue Radio Dalam -->
-                <div class="hotel-card" data-hotel="aston-bellevue">
-                    <div class="flex items-center space-x-6">
-                        <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                             alt="Aston Bellevue Radio Dalam" 
-                             class="hotel-image">
-                        <div class="flex-1">
-                            <h3 class="text-2xl font-bold text-gray-800 mb-2">Aston Bellevue Radio Dalam</h3>
-                            <p class="text-gray-600 mb-3 flex items-center">
-                                <i class="fas fa-map-marker-alt mr-2 text-teal-600"></i>
-                                Gandok, Jakarta Selatan
-                            </p>
-                            <div class="flex items-center mb-2">
-                                <div class="flex text-yellow-400 mr-3">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star-half-alt"></i>
-                                </div>
-                                <span class="text-gray-700 font-semibold">4.5/5</span>
-                                <span class="text-gray-500 ml-2">(312 ulasan)</span>
-                            </div>
-                            <div class="flex items-center space-x-4 text-sm text-teal-700">
-                                <span><i class="fas fa-wifi mr-1"></i>WiFi Gratis</span>
-                                <span><i class="fas fa-dumbbell mr-1"></i>Gym</span>
-                                <span><i class="fas fa-spa mr-1"></i>Spa</span>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <div class="text-3xl font-bold price-highlight">Rp 950.000</div>
-                            <div class="text-gray-600">/malam</div>
-                            <button class="btn-retell-primary mt-3">
-                                <i class="fas fa-calendar-check mr-2"></i>
-                                Reservasi
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Aston Priority Tower -->
-                <div class="hotel-card" data-hotel="aston-priority">
-                    <div class="flex items-center space-x-6">
-                        <img src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                             alt="Aston Priority Tower" 
-                             class="hotel-image">
-                        <div class="flex-1">
-                            <h3 class="text-2xl font-bold text-gray-800 mb-2">Aston Priority Tower</h3>
-                            <p class="text-gray-600 mb-3 flex items-center">
-                                <i class="fas fa-map-marker-alt mr-2 text-teal-600"></i>
-                                Pasar Minggu, Jakarta Selatan
-                            </p>
-                            <div class="flex items-center mb-2">
-                                <div class="flex text-yellow-400 mr-3">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                </div>
-                                <span class="text-gray-700 font-semibold">4.8/5</span>
-                                <span class="text-gray-500 ml-2">(456 ulasan)</span>
-                            </div>
-                            <div class="flex items-center space-x-4 text-sm text-teal-700">
-                                <span><i class="fas fa-wifi mr-1"></i>WiFi Gratis</span>
-                                <span><i class="fas fa-swimming-pool mr-1"></i>Rooftop Pool</span>
-                                <span><i class="fas fa-concierge-bell mr-1"></i>Concierge</span>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <div class="text-3xl font-bold price-highlight">Rp 1.200.000</div>
-                            <div class="text-gray-600">/malam</div>
-                            <button class="btn-retell-primary mt-3">
-                                <i class="fas fa-calendar-check mr-2"></i>
-                                Reservasi
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Additional Hotels -->
-                <div class="hotel-card" data-hotel="grand-sahid">
-                    <div class="flex items-center space-x-6">
-                        <img src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                             alt="Grand Sahid Jaya" 
-                             class="hotel-image">
-                        <div class="flex-1">
-                            <h3 class="text-2xl font-bold text-gray-800 mb-2">Grand Sahid Jaya</h3>
-                            <p class="text-gray-600 mb-3 flex items-center">
-                                <i class="fas fa-map-marker-alt mr-2 text-teal-600"></i>
-                                Sudirman, Jakarta Selatan
-                            </p>
-                            <div class="flex items-center mb-2">
-                                <div class="flex text-yellow-400 mr-3">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                </div>
-                                <span class="text-gray-700 font-semibold">4.7/5</span>
-                                <span class="text-gray-500 ml-2">(389 ulasan)</span>
-                            </div>
-                            <div class="flex items-center space-x-4 text-sm text-teal-700">
-                                <span><i class="fas fa-wifi mr-1"></i>WiFi Gratis</span>
-                                <span><i class="fas fa-car mr-1"></i>Valet Parking</span>
-                                <span><i class="fas fa-glass-cheers mr-1"></i>Bar</span>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <div class="text-3xl font-bold price-highlight">Rp 1.150.000</div>
-                            <div class="text-gray-600">/malam</div>
-                            <button class="btn-retell-primary mt-3">
-                                <i class="fas fa-calendar-check mr-2"></i>
-                                Reservasi
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Load More Button -->
-            <div class="text-center mt-12 mb-8">
-                <button class="btn-retell-primary px-10 py-4 text-lg">
-                    <i class="fas fa-plus mr-3"></i>
-                    Tampilkan Lebih Banyak Hotel
-                </button>
             </div>
         </div>
     </div>
 
     <script>
-        // Enhanced hotel card interactions
         document.querySelectorAll('.hotel-card').forEach(card => {
             card.addEventListener('click', function(e) {
-                // Don't select if clicking on reservation button
                 if (e.target.closest('.btn-retell-primary')) return;
-                
-                // Remove selection from all cards
                 document.querySelectorAll('.hotel-card').forEach(c => c.classList.remove('selected'));
-                
-                // Add selection to clicked card
                 this.classList.add('selected');
             });
         });
 
-        // Reservation button interactions
         document.querySelectorAll('.btn-retell-primary').forEach(btn => {
             btn.addEventListener('click', function(e) {
                 e.stopPropagation();
@@ -288,7 +154,6 @@
             });
         });
 
-        // Add smooth scrolling and fade-in animation
         window.addEventListener('load', function() {
             const cards = document.querySelectorAll('.hotel-card');
             cards.forEach((card, index) => {
