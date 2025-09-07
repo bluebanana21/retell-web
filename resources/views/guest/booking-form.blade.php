@@ -118,8 +118,6 @@
 
             </div>
 
-
-
             {{-- Sisi Kanan --}}
 
             <div class="col-span-1">
@@ -219,6 +217,7 @@
                     const nights = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
                     const roomPrice = pricePerNight * nights * rooms;
+                    //pajak dan biaya 10% dari harga kamar * berapa malam
                     const tax = roomPrice * 0.1;
                     const totalPrice = roomPrice + tax;
 

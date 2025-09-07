@@ -100,6 +100,7 @@ class GuestController extends Controller
         return view('guest.search-results', compact('hotel', 'availableRooms', 'checkIn', 'checkOut', 'guests', 'nights'));
     }
 
+    //yang ini buat test penampilan booking
     public function bookingFormView()
     {
         return view('guest.booking-form-view');
