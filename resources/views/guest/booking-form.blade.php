@@ -10,7 +10,13 @@
 
     </div>
 
-    <form action="" method="POST"> @csrf
+    <form action="{{ route('guest.booking.store') }}" method="POST"> @csrf
+        
+        {{-- Hidden fields required by storeBooking method --}}
+        @foreach($availableRooms as $room)
+            <input type="hidden" name="kamar_ids[]" value="{{ $room->id_kamar }}">
+        @endforeach
+        <input type="hidden" name="total_harga" id="hidden_total_price" value="{{ $totalPrice * 1.1 }}">
 
         <div class="grid grid-cols-3 gap-4">
 
@@ -38,7 +44,7 @@
 
                         <input
                             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            type="text" name="full_name">
+                            type="text" name="full_name" id="full_name" required value="{{ Auth::user()->name ?? '' }}">
 
                     </div>
 
@@ -50,7 +56,7 @@
 
                             <input
                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                type="email" name="email">
+                                type="email" name="email" id="email" required value="{{ Auth::user()->email ?? '' }}">
 
                         </div>
 
@@ -60,7 +66,7 @@
 
                             <input
                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                type="text" name="phone">
+                                type="text" name="phone" id="phone" required value="{{ Auth::user()->phone_number ?? '' }}">
 
                         </div>
 
@@ -108,7 +114,7 @@
 
 
 
-                    <button type="submit" class="btn-retell-primary w-full"> Lanjut ke
+                    <button type="submit" class="btn-retell-primary w-full" onclick="return validateForm()"> Lanjut ke
 
                         Pembayaran
 
@@ -140,8 +146,8 @@
                             <label class="block text-sm font-medium text-gray-700 mb-2">Check In</label>
 
                             <input type="date" name="check_in" value="{{ $checkIn->format('Y-m-d') }}"
-                                onchange="calculatePrice()"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                min="{{ date('Y-m-d') }}" onchange="updateCheckOutMin(); calculatePrice();"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
 
                         </div>
 
@@ -150,8 +156,8 @@
                             <label class="block text-sm font-medium text-gray-700 mb-2">Check Out</label>
 
                             <input type="date" name="check_out" value="{{ $checkOut->format('Y-m-d') }}"
-                                onchange="calculatePrice()"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                min="{{ date('Y-m-d', strtotime('+1 day')) }}" onchange="calculatePrice()"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
 
                         </div>
 
@@ -202,6 +208,68 @@
     </form>
 
     <script>
+        function validateForm() {
+
+            //validasi form sebelum submit
+            const fullName = document.getElementById('full_name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const checkIn = document.querySelector('input[name="check_in"]').value;
+            const checkOut = document.querySelector('input[name="check_out"]').value;
+
+            if (!fullName || !email || !phone) {
+                alert('Mohon lengkapi semua data pemesanan yang diperlukan.');
+                return false;
+            }
+
+            // validasi email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Format email tidak valid.');
+                return false;
+            }
+
+            // validasi tanggal checkin/checkout
+            if (!checkIn || !checkOut) {
+                alert('Mohon pilih tanggal check-in dan check-out.');
+                return false;
+            }
+
+            const checkInDate = new Date(checkIn);
+            const checkOutDate = new Date(checkOut);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            if (checkInDate < today) {
+                alert('Tanggal check-in tidak boleh kurang dari hari ini.');
+                return false;
+            }
+
+            if (checkOutDate <= checkInDate) {
+                alert('Tanggal check-out harus setelah tanggal check-in.');
+                return false;
+            }
+
+            return true;
+        }
+
+        function updateCheckOutMin() {
+            const checkInInput = document.querySelector('input[name="check_in"]');
+            const checkOutInput = document.querySelector('input[name="check_out"]');
+            
+            if (checkInInput.value) {
+                const checkInDate = new Date(checkInInput.value);
+                checkInDate.setDate(checkInDate.getDate() + 1);
+                const minCheckOut = checkInDate.toISOString().split('T')[0];
+                checkOutInput.min = minCheckOut;
+                
+                // kolo tanggal checkout kurang dari minim baru, ubah jadi minim
+                if (checkOutInput.value && checkOutInput.value <= checkInInput.value) {
+                    checkOutInput.value = minCheckOut;
+                }
+            }
+        }
+
         function calculatePrice() {
             const checkInInput = document.querySelector('input[name="check_in"]');
             const checkOutInput = document.querySelector('input[name="check_out"]');
@@ -221,11 +289,14 @@
                     const tax = roomPrice * 0.1;
                     const totalPrice = roomPrice + tax;
 
-                    // Update the display
+                    // update tampilan harga
                     document.getElementById('nights-count').textContent = nights;
                     document.getElementById('room-price').textContent = 'Rp ' + roomPrice.toLocaleString('id-ID');
                     document.getElementById('tax-price').textContent = 'Rp ' + tax.toLocaleString('id-ID');
                     document.getElementById('total-price').textContent = 'Rp ' + totalPrice.toLocaleString('id-ID');
+                    
+                    // update hidden field
+                    document.getElementById('hidden_total_price').value = totalPrice;
                 }
             }
         }
