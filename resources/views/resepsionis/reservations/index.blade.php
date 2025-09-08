@@ -119,8 +119,8 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div class="flex space-x-2">
                                 <a href="{{ route('resepsionis.reservations.show', $reservation->id_reservasi) }}" class="text-indigo-600 hover:text-indigo-900" title="Detail">
-                                    <button class="btn-primary px-3 py-2 text-sm">
-                                        <i class="fas fa-eye"></i>
+                                    <button class="btn-primary px-3 py-2 text-sm rounded-lg">
+                                        <i class="fas fa-eye text-white"></i>
                                     </button>
                                 </a>
                                 
@@ -129,8 +129,8 @@
                                     @csrf
                                     @method('PATCH')
                                     <input type="hidden" name="status" value="dikonfirmasi">
-                                    <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-lg text-sm transition-colors" title="Konfirmasi" onclick="return confirm('Konfirmasi reservasi ini?')">
-                                        <i class="fas fa-check"></i>
+                                    <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-lg text-sm transition-colors duration-200" title="Konfirmasi" onclick="return confirm('Konfirmasi reservasi ini?')">
+                                        <i class="fas fa-check text-white"></i>
                                     </button>
                                 </form>
                                 @endif
@@ -138,8 +138,8 @@
                                 @if($reservation->status == 'dikonfirmasi')
                                 <form action="{{ route('resepsionis.reservations.checkin', $reservation->id_reservasi) }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg text-sm transition-colors" title="Check-in" onclick="return confirm('Proses check-in untuk tamu ini?')">
-                                        <i class="fas fa-sign-in-alt"></i>
+                                    <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg text-sm transition-colors duration-200" title="Check-in" onclick="return confirm('Proses check-in untuk tamu ini?')">
+                                        <i class="fas fa-sign-in-alt text-white"></i>
                                     </button>
                                 </form>
                                 @endif
