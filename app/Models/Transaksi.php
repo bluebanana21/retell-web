@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Reservasi;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Transaksi extends Model

@@ -55,11 +55,12 @@
             box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.15);
         }
         .hotel-image {
-            width: 140px;
-            height: 100px;
+            width: 300px;
+            height: 200px;
             border-radius: 12px;
             object-fit: cover;
             box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            display: block;
         }
         .navbar {
             background: linear-gradient(135deg, #0f766e 0%, #134e4a 100%);
@@ -75,14 +76,23 @@
         <div class="max-w-6xl mx-auto">
             <div class="text-center mb-10">
                 <h1 class="text-4xl font-bold text-gray-800 mb-3">Hotel Terbaik di {{ $kota->nama_kota }}</h1>
-                <p class="text-gray-600 text-lg">Temukan pengalaman menginap yang tak terlupakan</p>
+                <p class="text-gray-60 text-lg">Temukan pengalaman menginap yang tak terlupakan</p>
             </div>
             
             @foreach ($hotel as $hotels )
             <div class="space-y-8">
                 <div class="hotel-card" data-hotel="aston-simatupang">
                     <div class="flex items-center space-x-6">
-                        <img src="" alt="Gambar Hotel" class="hotel-image">
+                        @php
+                            // Get the first image from hotelImages or use a default image
+                            $hotelImage = $hotels->hotelImages->first();
+                            $imageUrl = $hotelImage ? $hotelImage->image_url : 'https://images.unsplash.com/photo-1582719508461-905c673771fd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
+                        @endphp
+                        <img src="{{ $imageUrl }}"
+                             alt="{{ $hotels->nama_hotel }}"
+                             class="hotel-image"
+                             onerror="this.onerror=null;this.src='https://via.placeholder.com/800x600/0f766e/ffffff?text=Hotel+Image';"
+                             loading="lazy">
                         <div class="flex-1">
                             <h3 class="text-2xl font-bold text-gray-800 mb-2">{{ $hotels->nama_hotel }}</h3>
                             <p class="text-gray-600 mb-3 leading-relaxed">

@@ -29,7 +29,7 @@ class GuestController extends Controller
 
     public function hotels(Request $request)
     {
-        $query = Hotel::with(['kota', 'fasilitas'])->withAvg('reviews', 'rating');
+        $query = Hotel::with(['kota', 'fasilitas', 'hotelImages'])->withAvg('reviews', 'rating');
 
         // Filter by city
         if ($request->filled('kota_id')) {
@@ -77,7 +77,7 @@ class GuestController extends Controller
         // $checkOut = Carbon::parse($request->check_out);
 
         $kota = Kota::where('nama_kota', 'like', '%' . $request->city . '%')->first();
-        $hotel = Hotel::with(['kota', 'fasilitas'])
+        $hotel = Hotel::with(['kota', 'fasilitas', 'hotelImages'])
             ->where('kota_id', $kota ? $kota->id : 0)
             ->get();
         $guests = $request->guests;
@@ -108,10 +108,10 @@ class GuestController extends Controller
 
     public function showKamar($id){
         $hotel = Hotel::findOrFail($id);
-       $kamars = Kamar::with('detailKamar')
-        ->where('id_hotel', $id)
-        ->where('status', 'tersedia')
-        ->get();    
+        $kamars = Kamar::with(['detailKamar', 'kamarImages'])
+            ->where('id_hotel', $id)
+            ->where('status', 'tersedia')
+            ->get();
         return view('guest.show-kamar', compact('kamars', 'hotel'));
     }
 

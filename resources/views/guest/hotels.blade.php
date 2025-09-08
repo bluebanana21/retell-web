@@ -119,15 +119,15 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @forelse($hotels as $hotel)
                     <div class="hotel-card">
-                        @if($hotel->images && $hotel->images->count() > 0)
-                            <img src="{{ asset('storage/' . $hotel->images->first()->image_path) }}"
-                                 alt="{{ $hotel->nama_hotel }}"
-                                 class="w-full h-48 object-cover rounded-lg mb-4">
-                        @else
-                            <div class="w-full h-48 bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
-                                <i class="fas fa-hotel fa-3x text-gray-400"></i>
-                            </div>
-                        @endif
+                        @php
+                            // Get the first image from hotelImages or use a default image
+                            $hotelImage = $hotel->hotelImages->first();
+                            $imageUrl = $hotelImage ? $hotelImage->image_url : 'https://images.unsplash.com/photo-1582719508461-905c673771fd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
+                        @endphp
+                        <img src="{{ $imageUrl }}"
+                             alt="{{ $hotel->nama_hotel }}"
+                             class="w-[300px] h-[200px] object-cover rounded-lg mb-4"
+                             onerror="this.onerror=null;this.src='https://via.placeholder.com/800x600/0f766e/ffffff?text=Hotel+Image';">
                         
                         <h3 class="text-xl font-bold text-gray-800 mb-2">{{ $hotel->nama_hotel }}</h3>
                         <p class="text-gray-600 mb-3 flex items-center">

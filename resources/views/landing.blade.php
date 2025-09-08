@@ -140,16 +140,11 @@
                 @foreach($hotels as $hotel)
                 <div class="relative overflow-hidden rounded-lg shadow-lg group">
                     @php
-                        $cityImages = [
-                            'Jakarta' => 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                            'Bali' => 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                            'Yogyakarta' => 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                            'Surabaya' => 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                            'Bandung' => 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                            'default' => 'https://images.unsplash.com/photo-1582719508461-905c673771fd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
-                        ];
+                        // Get the first image from hotelImages or use a default image
+                        $hotelImage = $hotel->hotelImages->first();
+                        $imageUrl = $hotelImage ? $hotelImage->image_url : 'https://images.unsplash.com/photo-1582719508461-905c673771fd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
                     @endphp
-                    <img src="{{ $cityImages[$hotel->kota->nama_kota] ?? $cityImages['default'] }}"
+                    <img src="{{ $imageUrl }}"
                         alt="{{ $hotel->nama_hotel }}"
                         class="w-full h-64 object-cover group-hover:scale-110 transition duration-500">
                     <div class="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-30 transition duration-300"></div>

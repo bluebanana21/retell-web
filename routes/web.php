@@ -12,17 +12,19 @@ use App\Http\Controllers\Guest\GuestController;
 use App\Http\Controllers\Admin\FasilitasController;
 use App\Http\Controllers\Payment\PaymentController;
 use App\Http\Controllers\Resepsionis\ResepsionisController;
+use App\Http\Controllers\Admin\HotelImagesController;
+use App\Http\Controllers\Admin\KamarImagesController;
 
 // Guest Routes (Public)
 Route::get('/', function () {
-    $hotels = \App\Models\Hotel::with(['kota', 'fasilitas'])->get();
+    $hotels = \App\Models\Hotel::with(['kota', 'fasilitas', 'hotelImages'])->get();
     $roomTypes = \App\Models\DetailKamar::with(['kamars' => function ($query) {
         $query->where('status', 'tersedia');
     }])->get()->filter(function ($detailKamar) {
         return $detailKamar->kamars->count() > 0;
     });
     $facilities = \App\Models\Fasilitas::all();
-
+    
     return view('landing', compact('hotels', 'roomTypes', 'facilities'));
 })->name('home');
 Route::get('/guest', [GuestController::class, 'index'])->name('guest.home');
@@ -69,6 +71,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('kamar', KamarController::class);
     Route::resource('fasilitas', FasilitasController::class)->parameters(['fasilitas' => 'fasilitas']);
     Route::resource('kota', KotaController::class)->parameters(['kota' => 'kota']);
+    Route::resource('hotel-images', HotelImagesController::class);
+    Route::resource('kamar-images', KamarImagesController::class);
 });
 
 // Resepsionis Routes

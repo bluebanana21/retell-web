@@ -62,6 +62,18 @@
                             <i class="fas fa-map-marker-alt mr-3 text-lg"></i>
                             Kelola Kota
                         </a>
+                        
+                        <a href="{{ route('admin.hotel-images.index') }}"
+                           class="group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 {{ request()->routeIs('admin.hotel-images.*') ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg' : 'text-gray-300 hover:bg-slate-700 hover:text-white' }}">
+                            <i class="fas fa-images mr-3 text-lg"></i>
+                            Hotel Images
+                        </a>
+                        
+                        <a href="{{ route('admin.kamar-images.index') }}"
+                           class="group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 {{ request()->routeIs('admin.kamar-images.*') ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg' : 'text-gray-300 hover:bg-slate-700 hover:text-white' }}">
+                            <i class="fas fa-images mr-3 text-lg"></i>
+                            Kamar Images
+                        </a>
                     </nav>
                 </div>
             </div>
