@@ -26,6 +26,7 @@ Route::get('/', function () {
     return view('landing', compact('hotels', 'roomTypes', 'facilities'));
 })->name('home');
 Route::get('/guest', [GuestController::class, 'index'])->name('guest.home');
+Route::get('/guest/hotels', [GuestController::class, 'hotels'])->name('guest.hotels');
 Route::post('/search-hotel', [GuestController::class, 'searchHotel'])->name('guest.search.hotels');
 Route::get('search-hotel/show', [GuestController::class, 'showHotel'])->name('guest.show.hotel');
 Route::get('/cities/search', function () {

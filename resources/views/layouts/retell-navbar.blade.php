@@ -25,7 +25,7 @@
                     <span
                         class="absolute bottom-0 left-0 w-0 h-0.5 bg-teal-600 transition-all duration-300 group-hover:w-full"></span>
                 </a>
-                <a href="{{ url('/#properties') }}"
+                <a href="{{ route('guest.hotels') }}"
                     class="text-gray-600 hover:text-teal-600 font-medium transition-colors duration-200 py-2 px-1 relative group">
                     Properties
                     <span

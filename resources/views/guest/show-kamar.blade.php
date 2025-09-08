@@ -172,38 +172,45 @@
      data-room-type="{{ $kamar->detailKamar->tipe_kamar }}"
      data-facilities='@json(explode(",", $kamar->detailKamar->fasilitas))'
      data-price='{{ $kamar->harga_per_malam }}' style="animation-delay: 0.1s">
-                <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="The Classic Twin" class="room-image">
-                <div class="p-6">
-                    <div class="flex justify-between items-start mb-3">
-                        <h3 class="text-xl font-bold text-gray-800">{{ ucfirst($kamar->detailKamar->tipe_kamar) . " Room" }}</h3>
-                        <div class="text-right">
-                            <div class="price-tag">{{ "Rp " . number_format($kamar->harga_per_malam,0, ",", ".") }}</div>
-                            <p class="text-sm text-gray-500">per malam</p>
+                <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="The Classic Twin" class="room-image h-72">
+                <div class="p-8">
+                    <div class="flex justify-between items-start mb-4 gap-4">
+                        <h3 class="text-2xl font-bold text-gray-800">{{ ucfirst($kamar->detailKamar->tipe_kamar) . " Room" }}</h3>
+                        <div class="flex flex-col items-end">
+                            <div class="price-tag text-2xl">{{ "Rp " . number_format($kamar->harga_per_malam,0, ",", ".") }}</div>
+                            <p class="text-xs text-gray-500">per malam</p>
                         </div>
                     </div>
                     
-                    <p class="text-gray-600 text-sm mb-4 leading-relaxed">
+                    <p class="text-gray-600 text-sm mb-6 leading-relaxed">
                         {{ $kamar->detailKamar->deskripsi }}
                     </p>
 
-                    <div class="mb-4">
-                        <div class="icon-feature">
-                            <i class="fas fa-user"></i>
+                    <div class="space-y-2 mb-6">
+                        <div class="flex items-center text-gray-600 text-sm">
+                            <i class="fas fa-user mr-2 text-teal-600"></i>
                             {{ $kamar->detailKamar->kapasitas }} Orang
                         </div>
-                        <div class="icon-feature">
-                            <i class="fas fa-bed"></i>
+                        <div class="flex items-center text-gray-600 text-sm">
+                            <i class="fas fa-bed mr-2 text-teal-600"></i>
                             {{ $kamar->detailKamar->jumlah_kasur }} Kasur
                         </div>
-                        <div class="icon-feature">
-                            <i class="fa-solid fa-building"></i>
+                        <div class="flex items-center text-gray-600 text-sm">
+                            <i class="fa-solid fa-building mr-2 text-teal-600"></i>
                             Lantai {{ $kamar->lantai }}
                         </div>
                     </div>
 
-                    <button class="btn-retell-primary w-full">
+                    <a href="{{ route('guest.booking.form', [
+                        'detail_id' => $kamar->detail_id,
+                        'hotel_id' => $kamar->id_hotel,
+                        'check_in' => request('check_in', now()->addDay()->format('Y-m-d')),
+                        'check_out' => request('check_out', now()->addDays(2)->format('Y-m-d')),
+                        'guests' => request('guests', 2),
+                        'rooms' => 1
+                    ]) }}" class="btn-retell-primary w-full block text-center">
                         Book Now
-                    </button>
+                    </a>
                 </div>
             </div>
                @endforeach

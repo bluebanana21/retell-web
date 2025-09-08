@@ -72,32 +72,54 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @foreach($roomTypes as $roomType)
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
-                    @php
-                        $roomImages = [
-                            'reguler' => 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                            'deluxe' => 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                            'suite' => 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
-                        ];
-                        $minPrice = $roomType->kamars->min('harga_per_malam');
-                    @endphp
+                @php
+                    $roomImages = [
+                        'reguler' => 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                        'deluxe' => 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                        'suite' => 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+                    ];
+                    $minPrice = $roomType->kamars->min('harga_per_malam');
+                    $firstHotelWithThisRoomType = $roomType->kamars->first()?->hotel;
+                    $roomUrl = $firstHotelWithThisRoomType ? route('guest.show.kamar', ['id' => $firstHotelWithThisRoomType->id, 'slug' => Str::slug($firstHotelWithThisRoomType->nama_hotel)]) : route('guest.search.hotels');
+                @endphp
+                <div class="room-card bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col h-full">
                     <img src="{{ $roomImages[$roomType->tipe_kamar] ?? $roomImages['reguler'] }}"
-                        alt="{{ ucfirst($roomType->tipe_kamar) }} Room" class="w-full h-48 object-cover">
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ ucfirst($roomType->tipe_kamar) }} Room</h3>
-                        <p class="text-gray-600 mb-4">{{ $roomType->deskripsi }}</p>
-                        <div class="mb-4">
-                            <div class="flex items-center text-sm text-gray-600 mb-2">
-                                <i class="fas fa-users mr-2"></i>{{ $roomType->kapasitas }} guests
-                                <i class="fas fa-bed ml-4 mr-2"></i>{{ $roomType->jumlah_kasur }} bed(s)
+                        alt="{{ ucfirst($roomType->tipe_kamar) }} Room" class="w-full h-64 object-cover">
+                    <div class="p-8 flex-1 flex flex-col">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-3">{{ ucfirst($roomType->tipe_kamar) }} Room</h3>
+                        <p class="text-gray-600 text-sm mb-6 leading-relaxed line-clamp-3">{{ $roomType->deskripsi }}</p>
+                        <div class="space-y-2 mb-auto">
+                            <div class="flex items-center text-gray-600 text-sm">
+                                <i class="fas fa-users mr-2 text-teal-600"></i>
+                                {{ $roomType->kapasitas }} guests
                             </div>
-                            <div class="text-xs text-gray-500">
-                                {{ Str::limit($roomType->fasilitas, 60) }}
+                            <div class="flex items-center text-gray-600 text-sm">
+                                <i class="fas fa-bed mr-2 text-teal-600"></i>
+                                {{ $roomType->jumlah_kasur }} bed(s)
+                            </div>
+                            <div class="flex flex-wrap gap-2 mt-3">
+                                @foreach(explode(',', $roomType->fasilitas) as $fasilitas)
+                                    <span class="px-2 py-1 bg-teal-100 text-teal-800 text-xs rounded-full">
+                                        {{ trim($fasilitas) }}
+                                    </span>
+                                @endforeach
                             </div>
                         </div>
-                        <div class="flex items-center justify-between">
-                            <span class="text-2xl font-bold retell-blue">Rp {{ number_format($minPrice, 0, ',', '.') }}/night</span>
-                            <a href="{{ route('guest.search.hotels') }}" class="btn-retell-primary">Book Now</a>
+                        <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
+                            <div class="flex flex-col">
+                                <span class="text-sm text-gray-600">per night</span>
+                                <span class="text-2xl font-bold text-teal-600">Rp {{ number_format($minPrice, 0, ',', '.') }}</span>
+                            </div>
+                            <a href="{{ route('guest.booking.form', [
+                                'detail_id' => $roomType->detail_id,
+                                'hotel_id' => $firstHotelWithThisRoomType ? $firstHotelWithThisRoomType->id : 1,
+                                'check_in' => now()->addDay()->format('Y-m-d'),
+                                'check_out' => now()->addDays(2)->format('Y-m-d'),
+                                'guests' => 2,
+                                'rooms' => 1
+                            ]) }}" class="btn-retell-primary px-6 py-3 text-sm font-semibold whitespace-nowrap min-w-[100px] flex items-center justify-center">
+                                Book Now
+                            </a>
                         </div>
                     </div>
                 </div>
