@@ -41,7 +41,7 @@
             border-radius: 16px;
             padding: 1.5rem;
             margin-bottom: 1rem;
-            box-shadow: 0 4px 20px rgba(15, 118, 110, 0.08);
+            box-shadow: 0px 10px 5px 5px rgba(15, 118, 110, 0.3);
             transition: all 0.3s ease;
             cursor: pointer;
             border: 1px solid #e5e7eb;
@@ -126,7 +126,7 @@
                                 @endforeach
                             </div>
                         </div>
-                        <a href="{{ route('guest.show.kamar', $hotels->nama_hotel, $hotel->id) }}">
+                        <a href="{{ route('guest.show.kamar', ['id' => $hotels->id, 'slug' => Str::slug($hotels->nama_hotel)]) }}">
                         <div class="text-right">
                             <button class="btn-retell-primary">
                                 <i class="fa-solid fa-bed mr-2"></i>

@@ -63,6 +63,7 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             transition: all 0.3s ease;
             border: 1px solid #e5e7eb;
+            cursor: pointer;
         }
         .room-card:hover {
             transform: translateY(-4px);
@@ -100,6 +101,50 @@
             transform: translateY(30px);
             animation: slideUp 0.8s ease forwards;
         }
+      .facility-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    border-left: 3px solid #0f766e;
+    transition: all 0.2s ease;
+}
+
+.facility-item:hover {
+    background: #f1f5f9;
+    transform: translateX(4px);
+}
+
+.facility-item i {
+    color: #0f766e;
+    margin-right: 0.75rem;
+    font-size: 1.1rem;
+    width: 20px;
+    text-align: center;
+}
+
+#facilitiesModal {
+    transition: opacity 0.3s ease;
+}
+
+#modalContent {
+    transition: all 0.3s ease;
+}
+
+#facilitiesModal.show {
+    opacity: 1;
+}
+
+
+#facilitiesModal.show #modalContent {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.modal-show {
+    display: flex !important;
+}
         @keyframes slideUp {
             to {
                 opacity: 1;
@@ -114,50 +159,45 @@
     <div class="hero-section">
         <div class="max-w-6xl mx-auto">
             <h1 class="text-4xl font-bold mb-3 font-joan">Pilih Kamar Ternyaman</h1>
-            <p class="text-xl opacity-90">Hotel Aston Simatupang - Jakarta Selatan</p>
+            <p class="text-xl opacity-90">{{ $hotel->nama_hotel }} - {{ $hotel->kota->nama_kota }}</p>
         </div>
     </div>
 
     <!-- Main Content -->
     <div class="max-w-6xl mx-auto px-6 py-12">
-        <!-- Back Button -->
-        <div class="mb-8">
-            <a href="#" class="btn-secondary">
-                <i class="fas fa-arrow-left mr-2"></i>
-                Kembali ke Hotel
-            </a>
-        </div>
-
         <!-- Room Cards Grid -->
-        <div class="grid md:grid-cols-2 gap-8">
-            <!-- The Classic Twin -->
-            <div class="room-card stagger-animation" style="animation-delay: 0.1s">
+        <div class="grid md:grid-cols-3 gap-8">
+            @foreach ( $kamars as $kamar )
+            <div class="room-card stagger-animation cursor-pointer" data-room-name="{{ ucfirst($kamar->detailKamar->tipe_kamar) }} Room"
+     data-room-type="{{ $kamar->detailKamar->tipe_kamar }}"
+     data-facilities='@json(explode(",", $kamar->detailKamar->fasilitas))'
+     data-price='{{ $kamar->harga_per_malam }}' style="animation-delay: 0.1s">
                 <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="The Classic Twin" class="room-image">
                 <div class="p-6">
                     <div class="flex justify-between items-start mb-3">
-                        <h3 class="text-xl font-bold text-gray-800">The Classic Twin</h3>
+                        <h3 class="text-xl font-bold text-gray-800">{{ ucfirst($kamar->detailKamar->tipe_kamar) . " Room" }}</h3>
                         <div class="text-right">
-                            <div class="price-tag">RP 500.000</div>
+                            <div class="price-tag">{{ "Rp " . number_format($kamar->harga_per_malam,0, ",", ".") }}</div>
                             <p class="text-sm text-gray-500">per malam</p>
                         </div>
                     </div>
                     
                     <p class="text-gray-600 text-sm mb-4 leading-relaxed">
-                        Lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
+                        {{ $kamar->detailKamar->deskripsi }}
                     </p>
 
                     <div class="mb-4">
                         <div class="icon-feature">
                             <i class="fas fa-user"></i>
-                            2 Guests
+                            {{ $kamar->detailKamar->kapasitas }} Orang
                         </div>
                         <div class="icon-feature">
                             <i class="fas fa-bed"></i>
-                            2 Bed
+                            {{ $kamar->detailKamar->jumlah_kasur }} Kasur
                         </div>
                         <div class="icon-feature">
-                            <i class="fas fa-wifi"></i>
-                            Free Wifi
+                            <i class="fa-solid fa-building"></i>
+                            Lantai {{ $kamar->lantai }}
                         </div>
                     </div>
 
@@ -166,203 +206,42 @@
                     </button>
                 </div>
             </div>
-
-            <!-- The Classic King -->
-            <div class="room-card stagger-animation" style="animation-delay: 0.2s">
-                <img src="https://images.unsplash.com/photo-1560347876-aeef00ee58a1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="The Classic King" class="room-image">
-                <div class="p-6">
-                    <div class="flex justify-between items-start mb-3">
-                        <h3 class="text-xl font-bold text-gray-800">The Classic King</h3>
-                        <div class="text-right">
-                            <div class="price-tag">RP 500.000</div>
-                            <p class="text-sm text-gray-500">per malam</p>
-                        </div>
-                    </div>
-                    
-                    <p class="text-gray-600 text-sm mb-4 leading-relaxed">
-                        Lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-                    </p>
-
-                    <div class="mb-4">
-                        <div class="icon-feature">
-                            <i class="fas fa-user"></i>
-                            2 Guests
-                        </div>
-                        <div class="icon-feature">
-                            <i class="fas fa-bed"></i>
-                            1 King Bed
-                        </div>
-                        <div class="icon-feature">
-                            <i class="fas fa-wifi"></i>
-                            Free Wifi
-                        </div>
-                    </div>
-
-                    <button class="btn-retell-primary w-full">
-                        Book Now
-                    </button>
-                </div>
-            </div>
-
-            <!-- The Ambassador King -->
-            <div class="room-card stagger-animation" style="animation-delay: 0.3s">
-                <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="The Ambassador King" class="room-image">
-                <div class="p-6">
-                    <div class="flex justify-between items-start mb-3">
-                        <h3 class="text-xl font-bold text-gray-800">The Ambassador King</h3>
-                        <div class="text-right">
-                            <div class="price-tag">RP 500.000</div>
-                            <p class="text-sm text-gray-500">per malam</p>
-                        </div>
-                    </div>
-                    
-                    <p class="text-gray-600 text-sm mb-4 leading-relaxed">
-                        Lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-                    </p>
-
-                    <div class="mb-4">
-                        <div class="icon-feature">
-                            <i class="fas fa-user"></i>
-                            2 Guests
-                        </div>
-                        <div class="icon-feature">
-                            <i class="fas fa-bed"></i>
-                            1 King Bed
-                        </div>
-                        <div class="icon-feature">
-                            <i class="fas fa-wifi"></i>
-                            Free Wifi
-                        </div>
-                    </div>
-
-                    <button class="btn-retell-primary w-full">
-                        Book Now
-                    </button>
-                </div>
-            </div>
-
-            <!-- The Ambassador Twin -->
-            <div class="room-card stagger-animation" style="animation-delay: 0.4s">
-                <img src="https://images.unsplash.com/photo-1564501049412-61c2a3083791?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="The Ambassador Twin" class="room-image">
-                <div class="p-6">
-                    <div class="flex justify-between items-start mb-3">
-                        <h3 class="text-xl font-bold text-gray-800">The Ambassador Twin</h3>
-                        <div class="text-right">
-                            <div class="price-tag">RP 500.000</div>
-                            <p class="text-sm text-gray-500">per malam</p>
-                        </div>
-                    </div>
-                    
-                    <p class="text-gray-600 text-sm mb-4 leading-relaxed">
-                        Lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-                    </p>
-
-                    <div class="mb-4">
-                        <div class="icon-feature">
-                            <i class="fas fa-user"></i>
-                            2 Guests
-                        </div>
-                        <div class="icon-feature">
-                            <i class="fas fa-bed"></i>
-                            2 Twin Bed
-                        </div>
-                        <div class="icon-feature">
-                            <i class="fas fa-wifi"></i>
-                            Free Wifi
-                        </div>
-                    </div>
-
-                    <button class="btn-retell-primary w-full">
-                        Book Now
-                    </button>
-                </div>
-            </div>
-
-            <!-- Superior Deluxe -->
-            <div class="room-card stagger-animation" style="animation-delay: 0.5s">
-                <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Superior Deluxe" class="room-image">
-                <div class="p-6">
-                    <div class="flex justify-between items-start mb-3">
-                        <h3 class="text-xl font-bold text-gray-800">Superior Deluxe</h3>
-                        <div class="text-right">
-                            <div class="price-tag">RP 750.000</div>
-                            <p class="text-sm text-gray-500">per malam</p>
-                        </div>
-                    </div>
-                    
-                    <p class="text-gray-600 text-sm mb-4 leading-relaxed">
-                        Lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-                    </p>
-
-                    <div class="mb-4">
-                        <div class="icon-feature">
-                            <i class="fas fa-user"></i>
-                            2 Guests
-                        </div>
-                        <div class="icon-feature">
-                            <i class="fas fa-bed"></i>
-                            1 King Bed
-                        </div>
-                        <div class="icon-feature">
-                            <i class="fas fa-wifi"></i>
-                            Free Wifi
-                        </div>
-                    </div>
-
-                    <button class="btn-retell-primary w-full">
-                        Book Now
-                    </button>
-                </div>
-            </div>
-
-            <!-- Executive Suite -->
-            <div class="room-card stagger-animation" style="animation-delay: 0.6s">
-                <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Executive Suite" class="room-image">
-                <div class="p-6">
-                    <div class="flex justify-between items-start mb-3">
-                        <h3 class="text-xl font-bold text-gray-800">Executive Suite</h3>
-                        <div class="text-right">
-                            <div class="price-tag">RP 1.200.000</div>
-                            <p class="text-sm text-gray-500">per malam</p>
-                        </div>
-                    </div>
-                    
-                    <p class="text-gray-600 text-sm mb-4 leading-relaxed">
-                        Lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-                    </p>
-
-                    <div class="mb-4">
-                        <div class="icon-feature">
-                            <i class="fas fa-user"></i>
-                            4 Guests
-                        </div>
-                        <div class="icon-feature">
-                            <i class="fas fa-bed"></i>
-                            1 King Bed
-                        </div>
-                        <div class="icon-feature">
-                            <i class="fas fa-wifi"></i>
-                            Free Wifi
-                        </div>
-                    </div>
-
-                    <button class="btn-retell-primary w-full">
-                        Book Now
-                    </button>
-                </div>
-            </div>
+               @endforeach
         </div>
     </div>
 
+   <!-- Modal Overlay -->
+<div id="facilitiesModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+    <!-- Modal Content -->
+    <div class="bg-white rounded-2xl p-8 max-w-lg w-full mx-4 relative transform transition-all duration-300 scale-95 opacity-0" id="modalContent">
+        <!-- Close Button -->
+        <button id="closeModal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl font-bold transition-colors duration-200">
+            <i class="fas fa-times"></i>
+        </button>
+        
+        <!-- Modal Header -->
+        <div class="mb-6">
+            <h3 class="text-2xl font-bold text-gray-800 mb-2" id="modalRoomTitle">Fasilitas Kamar</h3>
+            <p class="text-sm text-gray-500" id="modalRoomType"></p>
+        </div>
+        
+        <!-- Facilities List -->
+        <div class="grid grid-cols-2 gap-3" id="facilitiesList">
+            <!-- Facilities akan muncul di sini -->
+        </div>
+    </div>
+</div>
+
+
     <script>
         // Add click functionality to Book Now buttons
-        document.querySelectorAll('.btn-retell-primary').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const roomName = this.closest('.room-card').querySelector('h3').textContent;
-                const roomPrice = this.closest('.room-card').querySelector('.price-tag').textContent;
-                alert(`Memulai pemesanan untuk ${roomName}\nHarga: ${roomPrice} per malam`);
-            });
-        });
+        // document.querySelectorAll('.btn-retell-primary').forEach(btn => {
+        //     btn.addEventListener('click', function() {
+        //         const roomName = this.closest('.room-card').querySelector('h3').textContent;
+        //         const roomPrice = this.closest('.room-card').querySelector('.price-tag').textContent;
+        //         alert(`Memulai pemesanan untuk ${roomName}\nHarga: ${roomPrice} per malam`);
+        //     });
+        // });
 
         // Staggered animation on load
         window.addEventListener('load', function() {
@@ -374,6 +253,74 @@
             });
         });
     </script>
+
+   <script>
+// Modal elements
+const modal = document.getElementById('facilitiesModal');
+const modalContent = document.getElementById('modalContent');
+const closeModal = document.getElementById('closeModal');
+const modalRoomTitle = document.getElementById('modalRoomTitle');
+const modalRoomType = document.getElementById('modalRoomType');
+const facilitiesList = document.getElementById('facilitiesList');
+
+// Fungsi untuk menampilkan modal
+function showFacilitiesModal(roomName, roomType, facilities, price) {
+    modalRoomTitle.textContent = `Fasilitas ${roomName}`;
+    modalRoomType.textContent = "Berikut adalah fasilitas untuk kamar ini:";
+
+    facilitiesList.innerHTML = '';
+    if (facilities && facilities.length > 0) {
+        facilities.forEach(facility => {
+            const facilityItem = document.createElement('div');
+            facilityItem.className = 'facility-item';
+            facilityItem.innerHTML = `<i class="fas fa-check-circle"></i><span class="text-gray-700 font-medium">${facility}</span>`;
+            facilitiesList.appendChild(facilityItem);
+        });
+    } else {
+        facilitiesList.innerHTML = '<div class="text-gray-500 text-center py-4">Tidak ada fasilitas tersedia</div>';
+    }
+
+    // Show modal with proper animation
+    modal.classList.remove('hidden');
+    
+    // Force reflow untuk memastikan hidden class hilang dulu
+    modal.offsetHeight;
+    
+    // Baru tambahkan class show
+    modal.classList.add('show');
+}
+
+// Fungsi untuk menutup modal
+function hideFacilitiesModal() {
+    modal.classList.remove('show');
+    
+    setTimeout(() => {
+        modal.classList.add('hidden');
+    }, 300); // sesuai dengan duration CSS transition
+}
+
+// Event listeners
+closeModal.addEventListener('click', hideFacilitiesModal);
+modal.addEventListener('click', e => {
+    if (e.target === modal) hideFacilitiesModal();
+});
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && !modal.classList.contains('hidden')) hideFacilitiesModal();
+});
+
+// Hanya klik card yang trigger modal
+document.querySelectorAll('.room-card').forEach(card => {
+    card.addEventListener('click', () => {
+        const roomName = card.dataset.roomName;
+        const roomType = card.dataset.roomType;
+        const facilities = JSON.parse(card.dataset.facilities);
+        const price = "Rp " + Number(card.dataset.price).toLocaleString('id-ID');
+        showFacilitiesModal(roomName, roomType, facilities, price);
+    });
+});
+
+</script>
+
 </body>
 
 </html>

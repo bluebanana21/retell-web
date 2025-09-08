@@ -26,9 +26,8 @@ Route::get('/', function () {
     return view('landing', compact('hotels', 'roomTypes', 'facilities'));
 })->name('home');
 Route::get('/guest', [GuestController::class, 'index'])->name('guest.home');
-Route::get('/hotels', [GuestController::class, 'hotels'])->name('guest.hotels');
-// Route::get('/hotel/{hotel}', [GuestController::class, 'hotelDetail'])->name('guest.hotel.detail');
 Route::post('/search-hotel', [GuestController::class, 'searchHotel'])->name('guest.search.hotels');
+Route::get('search-hotel/show', [GuestController::class, 'showHotel'])->name('guest.show.hotel');
 Route::get('/cities/search', function () {
     $search = request('search', '');
     
@@ -43,7 +42,7 @@ Route::get('/cities/search', function () {
     
     return response()->json($cities);
 })->name('cities.search');
-Route::get('/show-kamar/{hotel}',[GuestController::class, 'showKamar'])->name('guest.show.kamar');
+Route::get('/show-kamar/{id}/{slug}',[GuestController::class, 'showKamar'])->name('guest.show.kamar');
 // Route::get('/search-hotel/{kota}', [GuestController::class, 'showSearchHotel'])->name('guest.show.hotels');
 
 // Guest Routes (Authenticated)

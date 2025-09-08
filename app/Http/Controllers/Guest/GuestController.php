@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Guest;
 
-use App\Http\Controllers\Controller;
+use Carbon\Carbon;
+use App\Models\Kota;
 use App\Models\Hotel;
 use App\Models\Kamar;
-use App\Models\DetailKamar;
-use App\Models\Kota;
 use App\Models\Reservasi;
+use App\Models\DetailKamar;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class GuestController extends Controller
@@ -105,8 +106,13 @@ class GuestController extends Controller
         return view('guest.showHotel', compact('hotel', 'guests', 'kota'));
     }
 
-    public function showKamar(){
-        return view('guest.show-kamar');
+    public function showKamar($id){
+        $hotel = Hotel::findOrFail($id);
+       $kamars = Kamar::with('detailKamar')
+        ->where('id_hotel', $id)
+        ->where('status', 'tersedia')
+        ->get();    
+        return view('guest.show-kamar', compact('kamars', 'hotel'));
     }
 
     //yang ini buat test penampilan booking
