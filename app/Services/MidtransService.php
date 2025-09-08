@@ -22,6 +22,16 @@ class MidtransService
         $isSanitized = config('midtrans.is_sanitized', true);
         $is3ds = config('midtrans.is_3ds', true);
         
+        // Log raw configuration values for debugging
+        Log::info('Midtrans Configuration Values', [
+            'server_key' => $serverKey,
+            'merchant_id' => $merchantId,
+            'client_key' => $clientKey,
+            'is_production' => $isProduction,
+            'is_sanitized' => $isSanitized,
+            'is_3ds' => $is3ds
+        ]);
+        
         // Validation
         $validationErrors = [];
         if (empty($serverKey)) {
@@ -137,6 +147,7 @@ class MidtransService
                 [
                     'order_id' => $orderId,
                     'jumlah_pembayaran' => $reservasi->total_harga,
+                    'metode_pembayaran' => 'midtrans', // Add default payment method
                     'status_pembayaran' => 'pending',
                     'snap_token' => $snapToken,
                     'tanggal_pembayaran' => now()
