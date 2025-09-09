@@ -197,8 +197,8 @@
                     @csrf
                     @method('PATCH')
                     <input type="hidden" name="status" value="dikonfirmasi">
-                    <button type="submit" class="btn-primary px-4 py-2" onclick="return confirm('Konfirmasi reservasi ini?')">
-                        <i class="fas fa-check mr-2"></i>Konfirmasi Reservasi
+                    <button type="submit" class="btn-primary px-4 py-2 text-white" onclick="return confirm('Konfirmasi reservasi ini?')">
+                        <i class="fas fa-check mr-2 text-white"></i>Konfirmasi Reservasi
                     </button>
                 </form>
             @endif

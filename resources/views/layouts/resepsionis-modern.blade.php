@@ -29,6 +29,7 @@
             --light: #f8f9fa;
             --gray: #6c757d;
             --sidebar-width: 260px;
+            --sidebar-collapsed-width: 70px;
         }
         
         body {
@@ -46,7 +47,11 @@
         }
         
         .sidebar.collapsed {
-            width: 70px;
+            width: var(--sidebar-collapsed-width);
+        }
+        
+        .sidebar.hidden {
+            margin-left: calc(var(--sidebar-collapsed-width) * -1);
         }
         
         .main-content {
@@ -55,7 +60,11 @@
         }
         
         .sidebar.collapsed ~ .main-content {
-            margin-left: 70px;
+            margin-left: var(--sidebar-collapsed-width);
+        }
+        
+        .sidebar.hidden ~ .main-content {
+            margin-left: 0;
         }
         
         .brand-logo {
@@ -243,16 +252,33 @@
                     <button id="mobile-toggle" class="text-gray-600 mr-4 md:hidden">
                         <i class="fas fa-bars text-xl"></i>
                     </button>
+                    <button id="desktop-sidebar-toggle" class="text-gray-600 mr-4 hidden md:block">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
                     <h1 class="text-xl font-bold text-gray-800">@yield('title', 'Dashboard')</h1>
                 </div>
                 
                 <div class="flex items-center space-x-4">
                     <div class="relative">
-                        <div class="flex items-center space-x-3">
+                        <button id="profile-toggle" class="flex items-center space-x-3 focus:outline-none">
                             <span class="text-gray-700 hidden md:block">{{ auth()->user()->name }}</span>
                             <div class="avatar bg-indigo-500">
                                 {{ substr(auth()->user()->name, 0, 1) }}
                             </div>
+                        </button>
+                        
+                        <!-- Dropdown menu -->
+                        <div id="profile-dropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 hidden z-50">
+                            <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+                                <i class="fas fa-user-edit mr-2"></i>Edit Profile
+                            </a>
+                            <hr class="my-2">
+                            <form action="{{ route('logout') }}" method="POST">
+                                @csrf
+                                <button type="submit" class="w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100">
+                                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -318,10 +344,53 @@
             this.classList.remove('active');
         });
         
-        // Sidebar collapse
+        // Desktop sidebar toggle (hide/show completely)
+        document.getElementById('desktop-sidebar-toggle').addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('hidden');
+            document.querySelector('.main-content').classList.toggle('full-width');
+            
+            // Update icon based on state
+            const icon = this.querySelector('i');
+            if (document.querySelector('.sidebar').classList.contains('hidden')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-arrow-right');
+            } else {
+                icon.classList.remove('fa-arrow-right');
+                icon.classList.add('fa-bars');
+            }
+        });
+        
+        // Sidebar collapse (compact view)
         document.getElementById('sidebar-collapse').addEventListener('click', function() {
             document.querySelector('.sidebar').classList.toggle('collapsed');
             document.querySelector('.main-content').classList.toggle('collapsed');
+            
+            // Update icon based on state
+            const icon = this.querySelector('i');
+            if (document.querySelector('.sidebar').classList.contains('collapsed')) {
+                icon.classList.remove('fa-angle-left');
+                icon.classList.add('fa-angle-right');
+            } else {
+                icon.classList.remove('fa-angle-right');
+                icon.classList.add('fa-angle-left');
+            }
+        });
+        
+        // Profile dropdown toggle
+        document.getElementById('profile-toggle').addEventListener('click', function() {
+            document.getElementById('profile-dropdown').classList.toggle('hidden');
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const profileDropdown = document.getElementById('profile-dropdown');
+            const profileToggle = document.getElementById('profile-toggle');
+            
+            if (profileDropdown && profileToggle) {
+                if (!profileToggle.contains(event.target) && !profileDropdown.contains(event.target)) {
+                    profileDropdown.classList.add('hidden');
+                }
+            }
         });
     </script>
     

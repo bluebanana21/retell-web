@@ -98,8 +98,8 @@
                 Check-in Hari Ini
             </h3>
             <div class="mt-3 md:mt-0">
-                <a href="{{ route('resepsionis.reservations.index') }}" class="btn-primary inline-flex items-center">
-                    <i class="fas fa-list mr-2"></i>
+                <a href="{{ route('resepsionis.reservations.index') }}" class="btn-primary inline-flex items-center text-white">
+                    <i class="fas fa-list mr-2 text-white"></i>
                     Lihat Semua Reservasi
                 </a>
             </div>
@@ -169,9 +169,10 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+
                                 <a href="{{ route('resepsionis.reservations.show', $reservation->id_reservasi) }}" class="text-indigo-600 hover:text-indigo-900">
-                                    <button class="btn-primary px-3 py-2 text-sm">
-                                        <i class="fas fa-eye mr-1"></i>Detail
+                                    <button class="btn-primary px-3 py-2 text-sm text-white">
+                                        <i class="fas fa-eye mr-1 text-white"></i>Detail
                                     </button>
                                 </a>
                             </td>

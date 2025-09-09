@@ -35,8 +35,9 @@
                             <option value="selesai" {{ request('status') == 'selesai' ? 'selected' : '' }}>Selesai</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn-primary px-4 py-2.5">
-                        <i class="fas fa-filter mr-1"></i>Filter
+
+                    <button type="submit" class="btn-primary px-4 py-2.5 text-white">
+                        <i class="fas fa-filter mr-1 text-white"></i>Filter
                     </button>
                 </form>
             </div>
