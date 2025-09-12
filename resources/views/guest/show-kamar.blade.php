@@ -431,7 +431,7 @@
                             'check_out' => request('check_out', now()->addDays(2)->format('Y-m-d')),
                             'guests' => request('guests', 2),
                             'rooms' => 1
-                        ]) }}" class="btn-retell-primary w-full block text-center">
+                        ]) }}" class="btn-retell-primary w-full block text-center" onclick="event.stopPropagation();">
                             Book Now
                         </a>
                     </div>

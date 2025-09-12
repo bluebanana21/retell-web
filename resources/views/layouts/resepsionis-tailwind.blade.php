@@ -21,80 +21,80 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-color: #f5f7fb;
             min-height: 100vh;
         }
         
         .sidebar {
-            background: linear-gradient(180deg, #1e3a8a 0%, #3b82f6 100%);
-            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            background: #ffffff;
+            border-right: 1px solid #e2e8f0;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
         }
         
         .brand-link {
-            background: rgba(0,0,0,0.1);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.03);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
         }
         
         .sidebar-nav-link {
-            color: rgba(255,255,255,0.8);
+            color: #4a5568;
             border-radius: 8px;
             margin: 2px 8px;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
+            font-weight: 500;
         }
         
         .sidebar-nav-link:hover {
-            background: rgba(255,255,255,0.1);
-            color: #fff;
-            transform: translateX(5px);
+            background: #f1f5f9;
+            color: #2d3748;
         }
         
         .sidebar-nav-link.active {
-            background: linear-gradient(45deg, #3b82f6, #1e40af);
+            background: #3b82f6;
             color: #fff;
-            box-shadow: 0 4px 8px rgba(59,130,246,0.3);
+            box-shadow: 0 4px 6px rgba(59,130,246,0.2);
         }
         
         .main-header {
             background: rgba(255,255,255,0.95);
             backdrop-filter: blur(10px);
-            border-bottom: none;
-            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            border-bottom: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
         
         .content-header {
-            background: rgba(255,255,255,0.9);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
+            background: #ffffff;
+            border-radius: 12px;
             margin: 15px;
             padding: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
         }
         
         .card {
-            border-radius: 15px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-            backdrop-filter: blur(10px);
-            background: rgba(255,255,255,0.95);
-            transition: all 0.3s ease;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            background: #ffffff;
+            transition: all 0.2s ease;
+            border: 1px solid #e2e8f0;
         }
         
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
         }
         
         .info-box {
-            border-radius: 15px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-            backdrop-filter: blur(10px);
-            background: rgba(255,255,255,0.95);
-            border: none;
-            transition: all 0.3s ease;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s ease;
         }
         
         .info-box:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
         }
         
         .user-avatar {
@@ -127,26 +127,26 @@
                         <div class="flex items-center">
                             <div class="ml-3 relative">
                                 <div class="flex items-center space-x-3">
-                                    <div class="text-sm text-gray-700">
+                                    <div class="text-sm text-gray-700 hidden md:block">
                                         {{ auth()->user()->name }}
                                     </div>
                                     <div class="relative">
                                         <button id="user-menu-button" class="flex text-sm rounded-full focus:outline-none">
-                                            <div class="bg-indigo-100 text-indigo-800 rounded-full w-10 h-10 flex items-center justify-center font-semibold">
+                                            <div class="bg-primary/10 text-primary rounded-full w-10 h-10 flex items-center justify-center font-semibold">
                                                 {{ substr(auth()->user()->name, 0, 1) }}
                                             </div>
                                         </button>
                                     </div>
                                 </div>
                                 
-                                <div id="user-dropdown" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-                                    <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" tabindex="-1">
+                                <div id="user-dropdown" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50 border border-gray-200" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+                                    <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md" role="menuitem" tabindex="-1">
                                         <i class="fas fa-user mr-2"></i>Profile
                                     </a>
-                                    <div class="border-t border-gray-200"></div>
+                                    <div class="border-t border-gray-200 my-1"></div>
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf
-                                        <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" tabindex="-1">
+                                        <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md" role="menuitem" tabindex="-1">
                                             <i class="fas fa-sign-out-alt mr-2"></i>Logout
                                         </button>
                                     </form>
@@ -159,10 +159,10 @@
                 <!-- Mobile menu -->
                 <div id="mobile-menu" class="hidden md:hidden">
                     <div class="pt-2 pb-3 space-y-1">
-                        <a href="{{ route('resepsionis.dashboard') }}" class="border-transparent {{ request()->routeIs('resepsionis.dashboard') ? 'border-indigo-500 text-indigo-700 bg-indigo-50' : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800' }} block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+                        <a href="{{ route('resepsionis.dashboard') }}" class="border-transparent {{ request()->routeIs('resepsionis.dashboard') ? 'border-primary text-primary bg-primary/10' : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800' }} block pl-3 pr-4 py-2 border-l-4 text-base font-medium rounded-md">
                             <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
                         </a>
-                        <a href="{{ route('resepsionis.reservations.index') }}" class="border-transparent {{ request()->routeIs('resepsionis.reservations.*') ? 'border-indigo-500 text-indigo-700 bg-indigo-50' : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800' }} block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+                        <a href="{{ route('resepsionis.reservations.index') }}" class="border-transparent {{ request()->routeIs('resepsionis.reservations.*') ? 'border-primary text-primary bg-primary/10' : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800' }} block pl-3 pr-4 py-2 border-l-4 text-base font-medium rounded-md">
                             <i class="fas fa-calendar-check mr-2"></i>Kelola Reservasi
                         </a>
                     </div>
@@ -176,19 +176,19 @@
             <aside class="sidebar hidden md:block md:w-64 flex-shrink-0">
                 <div class="h-full flex flex-col">
                     <div class="brand-link flex items-center px-4 py-5">
-                        <i class="fas fa-hotel text-white text-2xl mr-3"></i>
-                        <span class="brand-text text-white text-xl font-semibold">Retell Hotel</span>
+                        <i class="fas fa-hotel text-primary text-2xl mr-3"></i>
+                        <span class="brand-text text-primary text-xl font-semibold">Retell Hotel</span>
                     </div>
                     
-                    <div class="flex-1 overflow-y-auto">
-                        <nav class="mt-5 px-2">
+                    <div class="flex-1 overflow-y-auto py-5">
+                        <nav class="px-3">
                             <a href="{{ route('resepsionis.dashboard') }}" class="sidebar-nav-link {{ request()->routeIs('resepsionis.dashboard') ? 'active' : '' }} flex items-center px-4 py-3 text-base font-medium rounded-md">
                                 <i class="fas fa-tachometer-alt mr-3"></i>
-                                Dashboard
+                                <span>Dashboard</span>
                             </a>
                             <a href="{{ route('resepsionis.reservations.index') }}" class="sidebar-nav-link {{ request()->routeIs('resepsionis.reservations.*') ? 'active' : '' }} flex items-center px-4 py-3 text-base font-medium rounded-md">
                                 <i class="fas fa-calendar-check mr-3"></i>
-                                Kelola Reservasi
+                                <span>Kelola Reservasi</span>
                             </a>
                         </nav>
                     </div>
@@ -220,7 +220,7 @@
                 <!-- Alerts -->
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
                     @if (session('success'))
-                        <div class="rounded-md bg-green-50 p-4 mb-4">
+                        <div class="rounded-lg bg-green-50 p-4 mb-4 border border-green-200">
                             <div class="flex">
                                 <div class="flex-shrink-0">
                                     <i class="fas fa-check-circle text-green-400"></i>
@@ -243,7 +243,7 @@
                     @endif
                     
                     @if (session('error'))
-                        <div class="rounded-md bg-red-50 p-4 mb-4">
+                        <div class="rounded-lg bg-red-50 p-4 mb-4 border border-red-200">
                             <div class="flex">
                                 <div class="flex-shrink-0">
                                     <i class="fas fa-exclamation-circle text-red-400"></i>

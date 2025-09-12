@@ -83,11 +83,15 @@ class PaymentController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            Log::error('Payment processing failed: ' . $e->getMessage());
+            Log::error('Payment processing failed: ' . $e->getMessage(), [
+                'user_id' => Auth::id(),
+                'reservation_id' => $reservasi->id_reservasi,
+                'error_trace' => $e->getTraceAsString()
+            ]);
             
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to process payment. Please try again.'
+                'message' => $e->getMessage()
             ], 500);
         }
     }

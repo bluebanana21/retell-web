@@ -98,6 +98,12 @@
                     <li>Hubungi customer service bank atau penyedia pembayaran Anda</li>
                     <li>Jika masalah berlanjut, hubungi customer service kami</li>
                 </ul>
+                <div class="mt-4 p-3 bg-white border border-yellow-300 rounded-md">
+                    <p class="text-sm text-yellow-800">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        <strong>Informasi Penting:</strong> Jika Anda melihat pesan "system error", ini biasanya berarti ada masalah sementara dengan sistem pembayaran. Silakan coba lagi dalam beberapa menit.
+                    </p>
+                </div>
             </div>
         </div>
     </div>

@@ -209,6 +209,13 @@
                             window.location.href = '{{ route("payment.pending") }}?order_id=' + data.order_id;
                         },
                         onError: function(result) {
+                            console.error('Midtrans error:', result);
+                            // Check if it's a system error
+                            if (result.status_message && result.status_message.includes('system error')) {
+                                alert('Terjadi kesalahan sistem dari penyedia pembayaran. Silakan coba lagi dalam beberapa menit.');
+                            } else {
+                                alert('Pembayaran gagal: ' + (result.status_message || 'Terjadi kesalahan yang tidak diketahui.'));
+                            }
                             window.location.href = '{{ route("payment.failed") }}?order_id=' + data.order_id;
                         },
                         onClose: function() {
@@ -218,14 +225,14 @@
                         }
                     });
                 } else {
-                    alert(data.message || 'Terjadi kesalahan dalam memproses pembayaran.');
+                    alert(data.message || 'Terjadi kesalahan dalam memproses pembayaran. Silakan coba lagi.');
                     payButton.disabled = false;
                     payButton.innerHTML = originalText;
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Terjadi kesalahan dalam memproses pembayaran.');
+                alert('Terjadi kesalahan dalam memproses pembayaran. Silakan coba lagi.');
                 payButton.disabled = false;
                 payButton.innerHTML = originalText;
             });

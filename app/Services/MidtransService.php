@@ -134,7 +134,30 @@ class MidtransService
                 'params' => $params
             ]);
 
-            $snapToken = Snap::getSnapToken($params);
+            // Attempt to create the transaction with retry logic for system errors
+            $maxRetries = 3;
+            $retryCount = 0;
+            
+            while ($retryCount < $maxRetries) {
+                try {
+                    $snapToken = Snap::getSnapToken($params);
+                    break; // Success, exit the retry loop
+                } catch (\Exception $e) {
+                    $retryCount++;
+                    
+                    // If it's not a system error or we've reached max retries, throw the exception
+                    if (strpos($e->getMessage(), 'system error') === false || $retryCount >= $maxRetries) {
+                        throw $e;
+                    }
+                    
+                    // Wait before retrying (exponential backoff)
+                    usleep(500000 * $retryCount); // 0.5s, 1s, 1.5s
+                    Log::warning('Retrying Midtrans payment creation due to system error', [
+                        'attempt' => $retryCount,
+                        'order_id' => $orderId
+                    ]);
+                }
+            }
 
             Log::info('Snap token created successfully', [
                 'order_id' => $orderId,
@@ -163,10 +186,25 @@ class MidtransService
             Log::error('Midtrans payment creation failed', [
                 'order_id' => $orderId,
                 'error' => $e->getMessage(),
+                'code' => $e->getCode(),
                 'trace' => $e->getTraceAsString()
             ]);
             
-            throw new \Exception('Failed to create payment: ' . $e->getMessage());
+            // Provide more specific error messages based on the exception
+            $errorMessage = 'Failed to create payment. ';
+            
+            // Check for common Midtrans errors
+            if (strpos($e->getMessage(), '401') !== false) {
+                $errorMessage .= 'Authentication failed. Please contact support.';
+            } elseif (strpos($e->getMessage(), '400') !== false) {
+                $errorMessage .= 'Invalid request data. Please check your input.';
+            } elseif (strpos($e->getMessage(), '500') !== false || strpos($e->getMessage(), 'system error') !== false) {
+                $errorMessage .= 'System error from payment provider. Please try again in a few minutes.';
+            } else {
+                $errorMessage .= 'Please try again or contact support if the problem persists.';
+            }
+            
+            throw new \Exception($errorMessage);
         }
     }
 
@@ -273,13 +311,21 @@ class MidtransService
                 'error' => $e->getMessage(),
                 'code' => $e->getCode() ?? 'unknown'
             ]);
-            throw new \Exception('Midtrans API error: ' . $e->getMessage());
-            Log::error('General error getting transaction status', [
-                'order_id' => $orderId,
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            throw new \Exception('Failed to get transaction status: ' . $e->getMessage());
+            
+            // Provide more specific error messages
+            $errorMessage = 'Failed to get transaction status. ';
+            
+            if ($e->getCode() == 404) {
+                $errorMessage .= 'Transaction not found.';
+            } elseif ($e->getCode() == 401) {
+                $errorMessage .= 'Authentication failed.';
+            } elseif ($e->getCode() >= 500) {
+                $errorMessage .= 'System error from payment provider. Please try again later.';
+            } else {
+                $errorMessage .= 'Please try again.';
+            }
+            
+            throw new \Exception($errorMessage);
         }
     }
 

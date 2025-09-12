@@ -224,11 +224,11 @@
             <div class="flex-1 overflow-y-auto py-5">
                 <nav class="px-3">
                     <a href="{{ route('resepsionis.dashboard') }}" class="nav-link flex items-center px-4 py-3 text-base font-medium rounded-xl mb-2 text-white {{ request()->routeIs('resepsionis.dashboard') ? 'bg-white/20' : 'hover:bg-white/10' }}">
-                        <i class="fas fa-tachometer-alt mr-3 text-lg"></i>
+                        <i class="fas fa-tachometer-alt mr-3 text-lg text-white"></i>
                         <span class="nav-text">Dashboard</span>
                     </a>
                     <a href="{{ route('resepsionis.reservations.index') }}" class="nav-link flex items-center px-4 py-3 text-base font-medium rounded-xl mb-2 text-white {{ request()->routeIs('resepsionis.reservations.*') ? 'bg-white/20' : 'hover:bg-white/10' }}">
-                        <i class="fas fa-calendar-check mr-3 text-lg"></i>
+                        <i class="fas fa-calendar-check mr-3 text-lg text-white"></i>
                         <span class="nav-text">Kelola Reservasi</span>
                     </a>
                 </nav>
