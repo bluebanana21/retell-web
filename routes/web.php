@@ -10,11 +10,14 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\KamarController;
 use App\Http\Controllers\Guest\GuestController;
 use App\Http\Controllers\Admin\FasilitasController;
+use App\Http\Controllers\Payment\PaymentController;
 use App\Http\Controllers\Resepsionis\ResepsionisController;
+use App\Http\Controllers\Admin\HotelImagesController;
+use App\Http\Controllers\Admin\KamarImagesController;
 
 // Guest Routes (Public)
 Route::get('/', function () {
-    $hotels = \App\Models\Hotel::with(['kota', 'fasilitas'])->get();
+    $hotels = \App\Models\Hotel::with(['kota', 'fasilitas', 'hotelImages'])->get();
     $roomTypes = \App\Models\DetailKamar::with(['kamars' => function ($query) {
         $query->where('status', 'tersedia');
     }])->get()->filter(function ($detailKamar) {
@@ -25,9 +28,9 @@ Route::get('/', function () {
     return view('landing', compact('hotels', 'roomTypes', 'facilities'));
 })->name('home');
 Route::get('/guest', [GuestController::class, 'index'])->name('guest.home');
-Route::get('/hotels', [GuestController::class, 'hotels'])->name('guest.hotels');
-// Route::get('/hotel/{hotel}', [GuestController::class, 'hotelDetail'])->name('guest.hotel.detail');
+Route::get('/guest/hotels', [GuestController::class, 'hotels'])->name('guest.hotels');
 Route::post('/search-hotel', [GuestController::class, 'searchHotel'])->name('guest.search.hotels');
+Route::get('search-hotel/show', [GuestController::class, 'showHotel'])->name('guest.show.hotel');
 Route::get('/cities/search', function () {
     $search = request('search', '');
     
@@ -42,7 +45,7 @@ Route::get('/cities/search', function () {
     
     return response()->json($cities);
 })->name('cities.search');
-Route::get('/show-kamar/{hotel}',[GuestController::class, 'showKamar'])->name('guest.show.kamar');
+Route::get('/show-kamar/{id}/{slug}',[GuestController::class, 'showKamar'])->name('guest.show.kamar');
 // Route::get('/search-hotel/{kota}', [GuestController::class, 'showSearchHotel'])->name('guest.show.hotels');
 
 // Guest Routes (Authenticated)
@@ -52,6 +55,14 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::post('/booking', [GuestController::class, 'storeBooking'])->name('guest.booking.store');
     Route::get('/booking-success/{reservasi}', [GuestController::class, 'bookingSuccess'])->name('guest.booking.success');
     Route::get('/print-reservation/{reservasi}', [GuestController::class, 'printReservation'])->name('guest.print.reservation');
+    
+    // Payment Routes
+    Route::get('/payment/{reservasi}', [PaymentController::class, 'show'])->name('payment.show');
+    Route::post('/payment/{reservasi}/process', [PaymentController::class, 'process'])->name('payment.process');
+    Route::get('/payment/success', [PaymentController::class, 'success'])->name('payment.success');
+    Route::get('/payment/pending', [PaymentController::class, 'pending'])->name('payment.pending');
+    Route::get('/payment/failed', [PaymentController::class, 'failed'])->name('payment.failed');
+    Route::post('/payment/check-status', [PaymentController::class, 'checkStatus'])->name('payment.check.status');
 });
 
 // Admin Routes
@@ -60,6 +71,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('kamar', KamarController::class);
     Route::resource('fasilitas', FasilitasController::class)->parameters(['fasilitas' => 'fasilitas']);
     Route::resource('kota', KotaController::class)->parameters(['kota' => 'kota']);
+    Route::resource('hotel-images', HotelImagesController::class);
+    Route::resource('kamar-images', KamarImagesController::class);
 });
 
 // Resepsionis Routes
@@ -92,5 +105,8 @@ Route::middleware('auth')->group(function () {
 // Google Authentication Routes
 Route::get('/google/redirect', [GoogleController::class, 'redirect'])->name('google.redirect');
 Route::get('/google/callback', [GoogleController::class, 'callback'])->name('google.callback');
+
+// Midtrans Callback Route (Public)
+Route::post('/payment/midtrans/callback', [PaymentController::class, 'callback'])->name('payment.midtrans.callback');
 
 require __DIR__ . '/auth.php';

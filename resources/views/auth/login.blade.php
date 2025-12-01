@@ -26,49 +26,90 @@
         <!-- Left Side - Hotel Images -->
         <div class="w-3/5 p-8 relative overflow-hidden">
             <div class="grid grid-cols-4 gap-4 h-full">
+                @php
+                    // Flatten all hotel images into a single array
+                    $allImages = [];
+                    foreach($hotels as $hotel) {
+                        foreach($hotel->hotelImages as $image) {
+                            $allImages[] = $image->image_url;
+                        }
+                    }
+                    
+                    // If we don't have enough images, fill with default ones
+                    $defaultImages = [
+                        'https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
+                        'https://images.unsplash.com/photo-1582719508461-905c673771fd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                        'https://images.unsplash.com/photo-1611892440504-42a792e24d32?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                        'https://images.unsplash.com/photo-1584132967334-10e028bd69f7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+                    ];
+                    
+                    // Fill with default images if we don't have enough
+                    while(count($allImages) < 12) {
+                        $allImages = array_merge($allImages, $defaultImages);
+                    }
+                    
+                    // Shuffle and limit to 12 images
+                    shuffle($allImages);
+                    $allImages = array_slice($allImages, 0, 12);
+                @endphp
+                
                 <!-- Column 1 -->
                 <div class="flex flex-col gap-4">
                     <div
-                        class="bg-white/20 backdrop-blur-sm rounded-xl h-48 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                        class="bg-white/20 backdrop-blur-sm rounded-xl h-48 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 overflow-hidden">
+                        <img src="{{ $allImages[0] ?? $defaultImages[0] }}" alt="Hotel Image" class="w-full h-full object-cover">
                     </div>
                     <div
-                        class="bg-white/20 backdrop-blur-sm rounded-xl h-64 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                        class="bg-white/20 backdrop-blur-sm rounded-xl h-64 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 overflow-hidden">
+                        <img src="{{ $allImages[1] ?? $defaultImages[1] }}" alt="Hotel Image" class="w-full h-full object-cover">
                     </div>
                     <div
-                        class="bg-white/20 backdrop-blur-sm rounded-xl h-40 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                        class="bg-white/20 backdrop-blur-sm rounded-xl h-40 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 overflow-hidden">
+                        <img src="{{ $allImages[2] ?? $defaultImages[2] }}" alt="Hotel Image" class="w-full h-full object-cover">
                     </div>
                 </div>
+                
                 <!-- Column 2 -->
                 <div class="flex flex-col gap-4 mt-16">
                     <div
-                        class="bg-white/20 backdrop-blur-sm rounded-xl h-36 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                        class="bg-white/20 backdrop-blur-sm rounded-xl h-36 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 overflow-hidden">
+                        <img src="{{ $allImages[3] ?? $defaultImages[3] }}" alt="Hotel Image" class="w-full h-full object-cover">
                     </div>
                     <div
-                        class="bg-white/20 backdrop-blur-sm rounded-xl h-56 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                        class="bg-white/20 backdrop-blur-sm rounded-xl h-56 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 overflow-hidden">
+                        <img src="{{ $allImages[4] ?? $defaultImages[0] }}" alt="Hotel Image" class="w-full h-full object-cover">
                     </div>
                     <div
-                        class="bg-white/20 backdrop-blur-sm rounded-xl h-48 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                        class="bg-white/20 backdrop-blur-sm rounded-xl h-48 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 overflow-hidden">
+                        <img src="{{ $allImages[5] ?? $defaultImages[1] }}" alt="Hotel Image" class="w-full h-full object-cover">
                     </div>
                 </div>
+                
                 <!-- Column 3 -->
                 <div class="flex flex-col gap-4">
                     <div
-                        class="bg-white/20 backdrop-blur-sm rounded-xl h-52 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                        class="bg-white/20 backdrop-blur-sm rounded-xl h-52 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 overflow-hidden">
+                        <img src="{{ $allImages[6] ?? $defaultImages[2] }}" alt="Hotel Image" class="w-full h-full object-cover">
                     </div>
                     <div
-                        class="bg-white/20 backdrop-blur-sm rounded-xl h-44 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                        class="bg-white/20 backdrop-blur-sm rounded-xl h-44 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 overflow-hidden">
+                        <img src="{{ $allImages[7] ?? $defaultImages[3] }}" alt="Hotel Image" class="w-full h-full object-cover">
                     </div>
                     <div
-                        class="bg-white/20 backdrop-blur-sm rounded-xl h-60 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                        class="bg-white/20 backdrop-blur-sm rounded-xl h-60 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 overflow-hidden">
+                        <img src="{{ $allImages[8] ?? $defaultImages[0] }}" alt="Hotel Image" class="w-full h-full object-cover">
                     </div>
                 </div>
+                
                 <!-- Column 4 -->
                 <div class="flex flex-col gap-4 mt-32">
                     <div
-                        class="bg-white/20 backdrop-blur-sm rounded-xl h-48 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                        class="bg-white/20 backdrop-blur-sm rounded-xl h-48 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 overflow-hidden">
+                        <img src="{{ $allImages[9] ?? $defaultImages[1] }}" alt="Hotel Image" class="w-full h-full object-cover">
                     </div>
                     <div
-                        class="bg-white/20 backdrop-blur-sm rounded-xl h-56 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                        class="bg-white/20 backdrop-blur-sm rounded-xl h-56 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 overflow-hidden">
+                        <img src="{{ $allImages[10] ?? $defaultImages[2] }}" alt="Hotel Image" class="w-full h-full object-cover">
                     </div>
                 </div>
             </div>

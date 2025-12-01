@@ -43,7 +43,7 @@ class KamarController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'id_hotel' => 'required|exists:hotels,id',
+            'id_hotel' => 'required|exists:hotel,id',
             'detail_id' => 'required|exists:detail_kamars,detail_id',
             'harga_per_malam' => 'required|numeric|min:0',
             'lantai' => 'required|integer|min:1',
@@ -83,7 +83,7 @@ class KamarController extends Controller
     public function update(Request $request, Kamar $kamar)
     {
         $request->validate([
-            'id_hotel' => 'required|exists:hotels,id',
+            'id_hotel' => 'required|exists:hotel,id',
             'detail_id' => 'required|exists:detail_kamars,detail_id',
             'harga_per_malam' => 'required|numeric|min:0',
             'lantai' => 'required|integer|min:1',

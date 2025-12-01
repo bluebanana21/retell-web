@@ -3,6 +3,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 /* Retell Custom Styles */
 
 :root {
@@ -158,6 +159,34 @@
 
 .social-icon.facebook {
     background: linear-gradient(135deg, #1877f2 0%, #42a5f5 100%);
+}
+
+/* Admin dashboard enhancements */
+.admin-stat-card {
+    @apply transition-all duration-300 hover:-translate-y-1;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.admin-stat-card:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.admin-action-card {
+    @apply transition-all duration-300 hover:-translate-y-1;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.admin-action-card:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.admin-status-card {
+    @apply transition-all duration-300 hover:-translate-y-1;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.admin-status-card:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
 /* Custom animations */

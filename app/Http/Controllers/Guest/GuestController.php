@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Guest;
 
-use App\Http\Controllers\Controller;
+use Carbon\Carbon;
+use App\Models\Kota;
 use App\Models\Hotel;
 use App\Models\Kamar;
-use App\Models\DetailKamar;
-use App\Models\Kota;
 use App\Models\Reservasi;
+use App\Models\DetailKamar;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class GuestController extends Controller
@@ -28,7 +29,7 @@ class GuestController extends Controller
 
     public function hotels(Request $request)
     {
-        $query = Hotel::with(['kota', 'fasilitas'])->withAvg('reviews', 'rating');
+        $query = Hotel::with(['kota', 'fasilitas', 'hotelImages'])->withAvg('reviews', 'rating');
 
         // Filter by city
         if ($request->filled('kota_id')) {
@@ -76,7 +77,7 @@ class GuestController extends Controller
         // $checkOut = Carbon::parse($request->check_out);
 
         $kota = Kota::where('nama_kota', 'like', '%' . $request->city . '%')->first();
-        $hotel = Hotel::with(['kota', 'fasilitas'])
+        $hotel = Hotel::with(['kota', 'fasilitas', 'hotelImages'])
             ->where('kota_id', $kota ? $kota->id : 0)
             ->get();
         $guests = $request->guests;
@@ -105,8 +106,13 @@ class GuestController extends Controller
         return view('guest.showHotel', compact('hotel', 'guests', 'kota'));
     }
 
-    public function showKamar(){
-        return view('guest.show-kamar');
+    public function showKamar($id){
+        $hotel = Hotel::findOrFail($id);
+        $kamars = Kamar::with(['detailKamar', 'kamarImages'])
+            ->where('id_hotel', $id)
+            ->where('status', 'tersedia')
+            ->get();
+        return view('guest.show-kamar', compact('kamars', 'hotel'));
     }
 
     //yang ini buat test penampilan booking
@@ -186,8 +192,9 @@ class GuestController extends Controller
             Kamar::find($kamarId)->update(['status' => 'dibooked']);
         }
 
-        return redirect()->route('guest.booking.success', ['reservasi' => $reservations[0]->id_reservasi])
-            ->with('success', 'Reservasi berhasil dibuat!');
+        // Redirect to payment page instead of success page
+        return redirect()->route('payment.show', ['reservasi' => $reservations[0]->id_reservasi])
+            ->with('success', 'Reservasi berhasil dibuat! Silakan lakukan pembayaran.');
     }
 
     public function bookingSuccess(Reservasi $reservasi)

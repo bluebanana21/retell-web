@@ -6,12 +6,11 @@
         </h2>
     </div>
 
-    {{-- Entire booking form --}}
     <form action="" method="POST">
         @csrf
 
         <div class="grid grid-cols-3 gap-4">
-            {{-- Left side --}}
+            {{-- Sisi kiri --}}
             <div class="col-span-2">
                 {{-- Data Pemesanan --}}
                 <div class="bg-white rounded-lg p-4 text-black mt-4 shadow-xl">
@@ -67,7 +66,11 @@
                 </div>
             </div>
 
+<<<<<<< HEAD
             {{-- Right side --}}
+=======
+            {{-- Sisi kanan --}}
+>>>>>>> origin/feat/booking
             <div class="col-span-1">
                 <div class="bg-white rounded-lg p-4 text-black mt-4 shadow-xl">
                     <h1>The Classic Twin</h1>
