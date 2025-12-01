@@ -78,24 +78,25 @@
                 <p class="text-gray-600 text-lg">Temukan pengalaman menginap yang tak terlupakan</p>
             </div>
             
+            @foreach ($hotel as $hotels )
             <div class="space-y-8">
                 <div class="hotel-card" data-hotel="aston-simatupang">
                     <div class="flex items-center space-x-6">
-                        <img src="" alt="Gambar Hotel {{ $hotel->nama_hotel }}" class="hotel-image">
+                        <img src="" alt="Gambar Hotel" class="hotel-image">
                         <div class="flex-1">
-                            <h3 class="text-2xl font-bold text-gray-800 mb-2">{{ $hotel->nama_hotel }}</h3>
+                            <h3 class="text-2xl font-bold text-gray-800 mb-2">{{ $hotels->nama_hotel }}</h3>
                             <p class="text-gray-600 mb-3 leading-relaxed">
-                               {{ $hotel->deskripsi }}
+                               {{ $hotels->deskripsi }}
                             </p>
                             <div class="flex items-center mb-3">
                                 <div class="flex text-yellow-400 mr-3 text-lg">
                                     <i class="fas fa-star"></i>
                                 </div>
-                                <span class="text-gray-700 font-semibold">{{ $hotel->rating }}/5</span>
+                                <span class="text-gray-700 font-semibold">{{ $hotels->rating }}/5</span>
                             </div>
                             <p class="text-gray-600 mb-2 font-medium">Fasilitas:</p>
                             <div class="flex flex-wrap gap-3 text-sm text-teal-700">
-                                @foreach($hotel->fasilitas as $facility)
+                                @foreach($hotels->fasilitas as $facility)
                                     <span class="flex items-center bg-teal-50 px-3 py-1 rounded-full border border-teal-100">
                                         @if($facility->id == 1)
                                             <i class="fas fa-wifi mr-2"></i>
@@ -110,11 +111,11 @@
                                         @elseif($facility->id == 6)
                                             <i class="fas fa-parking mr-2"></i>
                                         @elseif($facility->id == 7)
-                                            <i class="fas fa-snowflake mr-2"></i>
+                                        <i class="fas fa-snowflake mr-2"></i>
                                         @elseif($facility->id == 8)
                                             <i class="fas fa-concierge-bell mr-2"></i>
                                         @elseif($facility->id == 9)
-                                            <i class="fas fa-tshirt mr-2"></i>
+                                        <i class="fas fa-tshirt mr-2"></i>
                                         @elseif($facility->id == 10)
                                             <i class="fas fa-briefcase mr-2"></i>
                                         @else
@@ -125,15 +126,19 @@
                                 @endforeach
                             </div>
                         </div>
+                        <a href="{{ route('guest.show.kamar', $hotels->nama_hotel, $hotel->id) }}">
                         <div class="text-right">
                             <button class="btn-retell-primary">
-                                <i class="fas fa-calendar-check mr-2"></i>
-                                Reservasi
-                            </button>
+                                <i class="fa-solid fa-bed mr-2"></i>
+                                    Lihat Kamar
+                                </button>
+                            </div>
+                        </a>
                         </div>
-                    </div>
                 </div>
             </div>
+            @endforeach
+            {{-- end card hotel --}}
         </div>
     </div>
 
@@ -146,26 +151,26 @@
             });
         });
 
-        document.querySelectorAll('.btn-retell-primary').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                const hotelName = this.closest('.hotel-card').querySelector('h3').textContent;
-                alert(`Memulai reservasi untuk ${hotelName}`);
-            });
-        });
+        // document.querySelectorAll('.btn-retell-primary').forEach(btn => {
+        //     btn.addEventListener('click', function(e) {
+        //         e.stopPropagation();
+        //         const hotelName = this.closest('.hotel-card').querySelector('h3').textContent;
+        //         alert(`Memulai reservasi untuk ${hotelName}`);
+        //     });
+        // });
 
-        window.addEventListener('load', function() {
-            const cards = document.querySelectorAll('.hotel-card');
-            cards.forEach((card, index) => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
-                setTimeout(() => {
-                    card.style.transition = 'all 0.6s ease';
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, index * 150);
-            });
-        });
+        // window.addEventListener('load', function() {
+        //     const cards = document.querySelectorAll('.hotel-card');
+        //     cards.forEach((card, index) => {
+        //         card.style.opacity = '0';
+        //         card.style.transform = 'translateY(20px)';
+        //         setTimeout(() => {
+        //             card.style.transition = 'all 0.6s ease';
+        //             card.style.opacity = '1';
+        //             card.style.transform = 'translateY(0)';
+        //         }, index * 150);
+        //     });
+        // });
     </script>
 </body>
 

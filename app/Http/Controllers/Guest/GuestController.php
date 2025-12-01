@@ -78,7 +78,7 @@ class GuestController extends Controller
         $kota = Kota::where('nama_kota', 'like', '%' . $request->city . '%')->first();
         $hotel = Hotel::with(['kota', 'fasilitas'])
             ->where('kota_id', $kota ? $kota->id : 0)
-            ->firstOrFail();
+            ->get();
         $guests = $request->guests;
 
         // Get available room types that can accommodate the guests
@@ -105,6 +105,11 @@ class GuestController extends Controller
         return view('guest.showHotel', compact('hotel', 'guests', 'kota'));
     }
 
+    public function showKamar(){
+        return view('guest.show-kamar');
+    }
+
+    //yang ini buat test penampilan booking
     public function bookingFormView()
     {
         return view('guest.booking-form-view');

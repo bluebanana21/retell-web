@@ -3,6 +3,7 @@
 use App\Models\Kota;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\KotaController;
 use App\Http\Controllers\GoogleController;
@@ -26,7 +27,7 @@ Route::get('/', function () {
 })->name('home');
 Route::get('/guest', [GuestController::class, 'index'])->name('guest.home');
 Route::get('/hotels', [GuestController::class, 'hotels'])->name('guest.hotels');
-Route::get('/hotel/{hotel}', [GuestController::class, 'hotelDetail'])->name('guest.hotel.detail');
+// Route::get('/hotel/{hotel}', [GuestController::class, 'hotelDetail'])->name('guest.hotel.detail');
 Route::post('/search-hotel', [GuestController::class, 'searchHotel'])->name('guest.search.hotels');
 Route::get('/cities/search', function () {
     $search = request('search', '');
@@ -42,6 +43,7 @@ Route::get('/cities/search', function () {
     
     return response()->json($cities);
 })->name('cities.search');
+Route::get('/show-kamar/{hotel}',[GuestController::class, 'showKamar'])->name('guest.show.kamar');
 // Route::get('/search-hotel/{kota}', [GuestController::class, 'showSearchHotel'])->name('guest.show.hotels');
 
 // Guest Routes (Authenticated)
