@@ -1,14 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.guest')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RETELL - Hotel Booking</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=inter:400,600&family=joan:400&display=swap" rel="stylesheet" />
+@section('title', 'Hotel Booking')
+
+@push('styles')
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -62,17 +56,11 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.15);
             display: block;
         }
-        .navbar {
-            background: linear-gradient(135deg, #0f766e 0%, #134e4a 100%);
-            padding: 1rem 2rem;
-            box-shadow: 0 2px 10px rgba(15, 118, 110, 0.25);
-        }
     </style>
-</head>
+@endpush
 
-<body class="bg-white font-inter">
-    @include('layouts.retell-navbar')
-    <div class="min-h-screen pt-20 px-8">
+@section('content')
+    <div class="min-h-screen pt-20 px-8 bg-white font-inter">
         <div class="max-w-6xl mx-auto">
             <div class="text-center mb-10">
                 <h1 class="text-4xl font-bold text-gray-800 mb-3">Hotel Terbaik di {{ $kota->nama_kota }}</h1>
@@ -152,6 +140,7 @@
         </div>
     </div>
 
+@push('scripts')
     <script>
         document.querySelectorAll('.hotel-card').forEach(card => {
             card.addEventListener('click', function(e) {
@@ -169,19 +158,6 @@
         //     });
         // });
 
-        // window.addEventListener('load', function() {
-        //     const cards = document.querySelectorAll('.hotel-card');
-        //     cards.forEach((card, index) => {
-        //         card.style.opacity = '0';
-        //         card.style.transform = 'translateY(20px)';
-        //         setTimeout(() => {
-        //             card.style.transition = 'all 0.6s ease';
-        //             card.style.opacity = '1';
-        //             card.style.transform = 'translateY(0)';
-        //         }, index * 150);
-        //     });
-        // });
     </script>
-</body>
-
-</html>
+@endpush
+@endsection

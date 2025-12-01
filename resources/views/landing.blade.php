@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0f172a">
     <title>RETELL - Hotel Booking</title>
+    <link rel="manifest" href="/manifest.webmanifest">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.tailwindcss.com"></script>
     {{-- auto complete --}}
@@ -36,7 +38,7 @@
         @csrf
         <div class="grid grid-cols-1 gap-4">
             <div>
-                <h1 class="block text-2xl font-medium text-black-700 mb-6">Search Hotels</h1>
+                <h1 class="block text-2xl font-medium text-gray-700 mb-6">Search Hotels</h1>
                 <div class="relative">
                     <input id="autoComplete" 
                            type="text" 

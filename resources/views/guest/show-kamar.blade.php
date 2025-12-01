@@ -1,14 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.guest')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kamar Hotel - RETELL</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=inter:400,600&family=joan:400&display=swap" rel="stylesheet" />
+@section('title', 'Kamar Hotel')
+
+@push('styles')
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -363,9 +357,10 @@
             }
         }
     </style>
-</head>
+@endpush
 
-<body class="bg-gray-50">
+@section('content')
+<div class="bg-gray-50">
     <!-- Hero Section -->
     <div class="hero-section">
         <div class="max-w-6xl mx-auto">
@@ -464,6 +459,7 @@
 </div>
 
 
+@push('scripts')
     <script>
         // Add click functionality to Book Now buttons
         // document.querySelectorAll('.btn-retell-primary').forEach(btn => {
@@ -593,7 +589,6 @@ document.querySelectorAll('.room-card').forEach(card => {
             });
         });
     </script>
-
-</body>
-
-</html>
+@endpush
+</div>
+@endsection

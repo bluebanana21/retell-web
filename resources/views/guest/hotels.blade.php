@@ -1,14 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.guest')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RETELL - Daftar Hotel</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=inter:400,600&family=joan:400&display=swap" rel="stylesheet" />
+@section('title', 'Daftar Hotel')
+
+@push('styles')
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -58,17 +52,11 @@
             box-shadow: 0 4px 15px rgba(15, 118, 110, 0.1);
             border: 1px solid #e5e7eb;
         }
-        .navbar {
-            background: linear-gradient(135deg, #0f766e 0%, #134e4a 100%);
-            padding: 1rem 2rem;
-            box-shadow: 0 2px 10px rgba(15, 118, 110, 0.25);
-        }
     </style>
-</head>
+@endpush
 
-<body class="bg-white font-inter">
-    @include('layouts.retell-navbar')
-    <div class="min-h-screen pt-20 px-8">
+@section('content')
+    <div class="min-h-screen pt-20 px-8 bg-white font-inter">
         <div class="max-w-6xl mx-auto">
             <div class="text-center mb-10">
                 <h1 class="text-4xl font-bold text-gray-800 mb-3">Daftar Hotel</h1>
@@ -192,6 +180,4 @@
             @endif
         </div>
     </div>
-</body>
-
-</html>
+@endsection

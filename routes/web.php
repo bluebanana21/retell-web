@@ -50,7 +50,7 @@ Route::get('/show-kamar/{id}/{slug}',[GuestController::class, 'showKamar'])->nam
 
 // Guest Routes (Authenticated)
 Route::middleware(['auth', 'role:user'])->group(function () {
-    Route::get('booking-form-view/{}', [GuestController::class, 'bookingFormView'])->name('guest.booking.form.view');
+    Route::get('booking-form-view/{reservasi}', [GuestController::class, 'bookingFormView'])->name('guest.booking.form.view');
     Route::get('/booking-form', [GuestController::class, 'bookingForm'])->name('guest.booking.form');
     Route::post('/booking', [GuestController::class, 'storeBooking'])->name('guest.booking.store');
     Route::get('/booking-success/{reservasi}', [GuestController::class, 'bookingSuccess'])->name('guest.booking.success');
