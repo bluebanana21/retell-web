@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\KotaController;
-use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\KamarController;
 use App\Http\Controllers\Guest\GuestController;
