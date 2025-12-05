@@ -21,11 +21,11 @@
     @include('layouts.retell-navbar')
 
     <!-- Main Content -->
-    <div class="min-h-screen flex pt-16"
+    <div class="min-h-screen pt-20 flex flex-col lg:flex-row lg:items-center lg:justify-center"
         style="background: linear-gradient(135deg, rgba(110, 180, 192, 0.9) 0%, rgba(0, 107, 131, 0.8) 100%);">
         <!-- Left Side - Hotel Images -->
-        <div class="w-3/5 p-8 relative overflow-hidden">
-            <div class="grid grid-cols-4 gap-4 h-full">
+        <div class="hidden lg:block lg:w-2/5 xl:w-1/2 p-6 lg:p-8 relative overflow-hidden">
+            <div class="grid grid-cols-3 xl:grid-cols-4 gap-4 h-full">
                 @php
                     // Flatten all hotel images into a single array
                     $allImages = [];
@@ -70,7 +70,7 @@
                 </div>
                 
                 <!-- Column 2 -->
-                <div class="flex flex-col gap-4 mt-16">
+                <div class="flex flex-col gap-4 mt-8 xl:mt-16">
                     <div
                         class="bg-white/20 backdrop-blur-sm rounded-xl h-36 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 overflow-hidden">
                         <img src="{{ $allImages[3] ?? $defaultImages[3] }}" alt="Hotel Image" class="w-full h-full object-cover">
@@ -102,7 +102,7 @@
                 </div>
                 
                 <!-- Column 4 -->
-                <div class="flex flex-col gap-4 mt-32">
+                <div class="flex flex-col gap-4 mt-12 xl:mt-32">
                     <div
                         class="bg-white/20 backdrop-blur-sm rounded-xl h-48 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 overflow-hidden">
                         <img src="{{ $allImages[9] ?? $defaultImages[1] }}" alt="Hotel Image" class="w-full h-full object-cover">
@@ -116,17 +116,17 @@
         </div>
 
         <!-- Right Side - Login Form -->
-        <div class="w-2/5 flex items-center justify-center p-8">
-            <div class="bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl p-8 max-w-md w-full border border-white/20">
+        <div class="flex-1 flex items-center justify-center px-4 py-10 sm:px-6 lg:px-10 max-w-5xl mx-auto">
+            <div class="bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl p-6 sm:p-10 max-w-md sm:max-w-lg w-full border border-white/20 space-y-6">
                 <!-- Session Status -->
                 <x-auth-session-status class="mb-4" :status="session('status')" />
 
                 <div class="text-center mb-8">
-                    <h2 class="font-joan text-3xl font-semibold mb-2" style="color: #006B83;">Welcome Back</h2>
-                    <p class="text-gray-600">Sign in to your account</p>
+                    <h2 class="font-joan text-2xl sm:text-3xl font-semibold mb-2" style="color: #006B83;">Welcome Back</h2>
+                    <p class="text-gray-600 text-sm sm:text-base">Sign in to your account</p>
                 </div>
 
-                <form method="POST" action="{{ route('login') }}" class="space-y-6">
+                <form method="POST" action="{{ route('login') }}" class="space-y-5 sm:space-y-6">
                     @csrf
 
                     <!-- Email Address -->
@@ -148,7 +148,7 @@
                     </div>
 
                     <!-- Remember Me & Forgot Password -->
-                    <div class="flex items-center justify-between">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                         <label for="remember_me" class="inline-flex items-center">
                             <input id="remember_me" type="checkbox"
                                 class="rounded border-gray-300 text-teal-600 shadow-sm focus:ring-teal-500"
