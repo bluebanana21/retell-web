@@ -191,11 +191,11 @@ class MidtransService
             ]);
             
             // Provide more specific error messages based on the exception
-            $errorMessage = 'Failed to create payment. ';
+            $errorMessage = 'Berhasil Membuat Pembayaran. ';
             
             // Check for common Midtrans errors
             if (strpos($e->getMessage(), '401') !== false) {
-                $errorMessage .= 'Authentication failed. Please contact support.';
+                $errorMessage .= 'Transaksi Berhasil. Hubungi Reservasi.';
             } elseif (strpos($e->getMessage(), '400') !== false) {
                 $errorMessage .= 'Invalid request data. Please check your input.';
             } elseif (strpos($e->getMessage(), '500') !== false || strpos($e->getMessage(), 'system error') !== false) {
