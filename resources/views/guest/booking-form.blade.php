@@ -43,13 +43,7 @@
                         </label>
 
                         <input
-                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-<<<<<<< HEAD
-                            type="text" name="full_name">
-=======
-                            type="text" name="full_name" id="full_name" required value="{{ Auth::user()->name ?? '' }}">
->>>>>>> origin/feat/booking
-
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" type="text" name="full_name" id="full_name" required value="{{ Auth::user()->name ?? '' }}">
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -60,12 +54,7 @@
 
                             <input
                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-<<<<<<< HEAD
-                                type="email" name="email">
-=======
                                 type="email" name="email" id="email" required value="{{ Auth::user()->email ?? '' }}">
->>>>>>> origin/feat/booking
-
                         </div>
 
                         <div>
@@ -74,11 +63,7 @@
 
                             <input
                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-<<<<<<< HEAD
-                                type="text" name="phone">
-=======
                                 type="text" name="phone" id="phone" required value="{{ Auth::user()->phone_number ?? '' }}">
->>>>>>> origin/feat/booking
 
                         </div>
 
@@ -126,11 +111,7 @@
 
 
 
-<<<<<<< HEAD
-                    <button type="submit" class="btn-retell-primary w-full"> Lanjut ke
-=======
                     <button type="submit" class="btn-retell-primary w-full" onclick="return validateForm()"> Lanjut ke
->>>>>>> origin/feat/booking
 
                         Pembayaran
 
@@ -140,11 +121,6 @@
 
             </div>
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> origin/feat/booking
             {{-- Sisi Kanan --}}
 
             <div class="col-span-1">
@@ -167,13 +143,8 @@
                             <label class="block text-sm font-medium text-gray-700 mb-2">Check In</label>
 
                             <input type="date" name="check_in" value="{{ $checkIn->format('Y-m-d') }}"
-<<<<<<< HEAD
-                                onchange="calculatePrice()"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-=======
                                 min="{{ date('Y-m-d') }}" onchange="updateCheckOutMin(); calculatePrice();"
                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
->>>>>>> origin/feat/booking
 
                         </div>
 
@@ -182,13 +153,8 @@
                             <label class="block text-sm font-medium text-gray-700 mb-2">Check Out</label>
 
                             <input type="date" name="check_out" value="{{ $checkOut->format('Y-m-d') }}"
-<<<<<<< HEAD
-                                onchange="calculatePrice()"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-=======
                                 min="{{ date('Y-m-d', strtotime('+1 day')) }}" onchange="calculatePrice()"
                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
->>>>>>> origin/feat/booking
 
                         </div>
 
@@ -239,8 +205,6 @@
     </form>
 
     <script>
-<<<<<<< HEAD
-=======
         function validateForm() {
 
             //validasi form sebelum submit
@@ -303,7 +267,6 @@
             }
         }
 
->>>>>>> origin/feat/booking
         function calculatePrice() {
             const checkInInput = document.querySelector('input[name="check_in"]');
             const checkOutInput = document.querySelector('input[name="check_out"]');
@@ -319,28 +282,18 @@
                     const nights = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
                     const roomPrice = pricePerNight * nights * rooms;
-<<<<<<< HEAD
-                    const tax = roomPrice * 0.1;
-                    const totalPrice = roomPrice + tax;
-
-                    // Update the display
-=======
                     //pajak dan biaya 10% dari harga kamar * berapa malam
                     const tax = roomPrice * 0.1;
                     const totalPrice = roomPrice + tax;
 
                     // update tampilan harga
->>>>>>> origin/feat/booking
                     document.getElementById('nights-count').textContent = nights;
                     document.getElementById('room-price').textContent = 'Rp ' + roomPrice.toLocaleString('id-ID');
                     document.getElementById('tax-price').textContent = 'Rp ' + tax.toLocaleString('id-ID');
                     document.getElementById('total-price').textContent = 'Rp ' + totalPrice.toLocaleString('id-ID');
-<<<<<<< HEAD
-=======
                     
                     // update hidden field
                     document.getElementById('hidden_total_price').value = totalPrice;
->>>>>>> origin/feat/booking
                 }
             }
         }
